@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>680</width>
-    <height>394</height>
+    <width>786</width>
+    <height>510</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -67,7 +67,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QListView" name="classLstv">
+         <widget class="QListView" name="classifyList">
           <property name="minimumSize">
            <size>
             <width>200</width>
@@ -108,7 +108,7 @@
          </layout>
         </item>
         <item>
-         <widget class="QListWidget" name="imageLstw">
+         <widget class="QListWidget" name="imageList">
           <property name="minimumSize">
            <size>
             <width>200</width>

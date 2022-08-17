@@ -39,7 +39,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.openBtn.clicked.connect(self.openLibrary)
         self.ui.searchBtn.clicked.connect(self.searchClassify)
         self.ui.setBtn.clicked.connect(self.setDialog)
-        self.ui.classLstv.clicked.connect(self.classifyListViewClicked)
+        self.ui.classifyList.clicked.connect(self.classifyListViewClicked)
 
     def addClassify(self):
         print("addBtn.clicked")
@@ -62,23 +62,23 @@ class MainWindow(QtWidgets.QMainWindow):
     def setClassifyListView(self, classify_list):
         """设置分类列表"""
         list_model = QtCore.QStringListModel(classify_list)
-        self.ui.classLstv.setModel(list_model)
+        self.ui.classifyList.setModel(list_model)
 
     def __initImageListViewStyle(self):
         """初始化图片列表样式"""
-        self.ui.imageLstw.setViewMode(QtWidgets.QListView.IconMode)
-        self.ui.imageLstw.setIconSize(QtCore.QSize(320, 320))
-        self.ui.imageLstw.setSpacing(15)
-        self.ui.imageLstw.setMovement(QtWidgets.QListView.Static)
+        self.ui.imageList.setViewMode(QtWidgets.QListView.IconMode)
+        self.ui.imageList.setIconSize(QtCore.QSize(320, 320))
+        self.ui.imageList.setSpacing(15)
+        self.ui.imageList.setMovement(QtWidgets.QListView.Static)
 
     def setImageListView(self, image_list):
         """设置图片列表"""
-        self.ui.imageLstw.clear()
+        self.ui.imageList.clear()
         for i in image_list:
-            item = QtWidgets.QListWidgetItem(self.ui.imageLstw)
+            item = QtWidgets.QListWidgetItem(self.ui.imageList)
             item.setIcon(QtGui.QIcon(i))
             item.setText(i)
-            self.ui.imageLstw.addItem(item)
+            self.ui.imageList.addItem(item)
 
     def classifyListViewClicked(self, index):
         """分类列表点击事件"""
