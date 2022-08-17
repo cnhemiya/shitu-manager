@@ -17,7 +17,7 @@ def main():
     # parser.reset(label_path)
     # print(parser.classifyList)
     # print(parser.labelList[3])
-    print(parser.realPathList('百事可乐eeee'))
+    print(parser.realPathList('百事可乐'))
     print(parser.filePath)
     print(parser.dirName)
 
