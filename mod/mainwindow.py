@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import mod.ui_mainwindow
-import mod.labelparse
+import mod.image_list_manager
 
 
 TOOL_BTN_ICON_SIZE = 64
@@ -16,7 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.__setIcon()
         self.__connectSignal()
         self.__initImageListViewStyle()
-        self.__labelParser = mod.labelparse.LabelParse()
+        self.__imageListMgr = mod.image_list_manager.ImageListManager()
 
     def __setIcon(self):
         """设置工具按钮图标"""
@@ -49,8 +49,8 @@ class MainWindow(QtWidgets.QMainWindow):
         file_path = QtWidgets.QFileDialog.getOpenFileName()
         print(file_path)
         label_path = file_path[0]
-        self.__labelParser.readFile(label_path)
-        self.setClassifyListView(self.__labelParser.classifyList)
+        self.__imageListMgr.readFile(label_path)
+        self.setClassifyListView(self.__imageListMgr.classifyList)
         self.__setStatusBar(label_path)
 
     def searchClassify(self):

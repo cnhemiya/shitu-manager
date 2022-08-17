@@ -5,7 +5,7 @@
 import os
 
 
-class LabelParse:
+class ImageListManager:
     def __init__(self, file_path="", encoding="utf-8"):
         self.__filePath = ""
         self.__dataList = {}
@@ -55,18 +55,3 @@ class LabelParse:
         for i in range(len(paths)):
             paths[i] = os.path.join(self.dirName, paths[i])
         return paths
-
-
-
-def main():
-    label_path = "/home/hmy/drink_dataset_v1.0/gallery/drink_label.txt"
-    parser = LabelParse(label_path)
-    # parser.reset(label_path)
-    # print(parser.classifyList)
-    # print(parser.labelList[3])
-    print(parser.realPathList('百事可乐'))
-    print(parser.filePath)
-    print(parser.dirName)
-
-if __name__ == '__main__':
-    main()
