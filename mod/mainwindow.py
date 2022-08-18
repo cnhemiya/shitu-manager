@@ -8,6 +8,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import mod.ui_mainwindow
 import mod.image_list_manager
 import mod.classify_ui_context
+import mod.image_list_ui_context
 import mod.utils
 
 
@@ -30,14 +31,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # 分类界面相关业务
         self.__classifyUiContext = mod.classify_ui_context.ClassifyUiContext(
-                ui=self.ui.classifyListView, parent=self, image_list_mgr=self.__imageListMgr) 
+                ui=self.ui.classifyListView, parent=self, image_list_mgr=self.__imageListMgr)
 
-        self.__imageListUiMenu = QtWidgets.QMenu()
-        self.__initImageListUiMenu()  # 初始化图片列表界面菜单
+        # 图片列表界面相关业务
+        self.__imageListUiContext = mod.image_list_ui_context.ImageListUiContext(
+                ui=self.ui.imageListWidget, parent=self, image_list_mgr=self.__imageListMgr)
 
         self.__initToolBtn()
         self.__connectSignal()
-        self.__initImageListViewStyle()
         
 
     def __initToolBtn(self):
@@ -63,11 +64,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.__setToolButton(self.ui.addImageBtn, "添加图片",
                              "./resource/add_image.png", TOOL_BTN_ICON_SIZE)
-        self.ui.addImageBtn.clicked.connect(self.addImage)
+        self.ui.addImageBtn.clicked.connect(self.__imageListUiContext.addImage)
 
         self.__setToolButton(self.ui.removeImageBtn, "删除图片",
                              "./resource/remove_image.png", TOOL_BTN_ICON_SIZE)
-        self.ui.removeImageBtn.clicked.connect(self.removeImage)
+        self.ui.removeImageBtn.clicked.connect(self.__imageListUiContext.removeImage)
 
         self.ui.searchClassifyHistoryCmb.setToolTip("查找分类历史")
         self.ui.imageZoomOutInHSlider.setToolTip("图片缩放")
@@ -89,23 +90,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.ui.appMenuBtn.setMenu(self.__appMenu)
         self.ui.appMenuBtn.setPopupMode(QtWidgets.QToolButton.InstantPopup)
-
-    def __initImageListUiMenu(self):
-        """初始化图片列表界面菜单"""
-        mod.utils.setMenu(self.__imageListUiMenu, "添加图片", self.addImage)
-        mod.utils.setMenu(self.__imageListUiMenu, "删除图片", self.removeImage)
-        mod.utils.setMenu(self.__imageListUiMenu, "编辑图片分类", self.editImageClassify)
-        self.__imageListUiMenu.addSeparator()
-        mod.utils.setMenu(self.__imageListUiMenu, "选择全部图片", self.selectAllImage)
-        mod.utils.setMenu(self.__imageListUiMenu, "反向选择图片", self.reverseSelectImage)
-        mod.utils.setMenu(self.__imageListUiMenu, "取消选择图片", self.cancelSelectImage)
-
-        self.ui.imageListWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.ui.imageListWidget.customContextMenuRequested.connect(self.__showImageListUiMenu)
-
-    def __showImageListUiMenu(self, pos):
-        """显示图片列表界面菜单"""
-        self.__imageListUiMenu.exec_(self.ui.imageListWidget.mapToGlobal(pos))
 
     def __connectSignal(self):
         """连接信号与槽"""
@@ -133,42 +117,10 @@ class MainWindow(QtWidgets.QMainWindow):
         """保存图片列表"""
         print("saveImageListBtn.clicked")
 
-    def addImage(self):
-        """添加图片"""
-        print("addImageBtn.clicked")
-
-    def removeImage(self):
-        """删除图片"""
-        print("removeImageBtn.clicked")
-
-    def editImageClassify(self):
-        """编辑图片分类"""
-        print("editImageClassify.clicked")
-
-    def selectAllImage(self):
-        """选择所有图片"""
-        print("selectAllImage.clicked")
-
-    def reverseSelectImage(self):
-        """反向选择图片"""
-        print("reverseSelectImage.clicked")
-
-    def cancelSelectImage(self):
-        """取消选择图片"""
-        print("cancelSelectImage.clicked")
-        # self.ui.imageListWidget.clearSelection()
-
     def setClassifyListView(self, classify_list):
         """设置分类列表"""
         list_model = QtCore.QStringListModel(classify_list)
         self.ui.classifyListView.setModel(list_model)
-
-    def __initImageListViewStyle(self):
-        """初始化图片列表样式"""
-        self.ui.imageListWidget.setViewMode(QtWidgets.QListView.IconMode)
-        self.ui.imageListWidget.setIconSize(QtCore.QSize(320, 320))
-        self.ui.imageListWidget.setSpacing(15)
-        self.ui.imageListWidget.setMovement(QtWidgets.QListView.Static)
 
     def setImageListView(self, image_list):
         """设置图片列表"""

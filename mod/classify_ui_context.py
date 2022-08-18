@@ -18,7 +18,7 @@ class ClassifyUiContext(QtCore.QObject):
         self.__imageListMgr = image_list_mgr
         self.__menu = QtWidgets.QMenu()
 
-        self.__initClassifyUiMenu()
+        self.__initMenu()
 
     @property
     def ui(self):
@@ -36,16 +36,16 @@ class ClassifyUiContext(QtCore.QObject):
     def menu(self):
         return self.__menu
 
-    def __initClassifyUiMenu(self):
+    def __initMenu(self):
         """初始化分类界面菜单"""
         mod.utils.setMenu(self.__menu, "添加分类", self.addClassify)
         mod.utils.setMenu(self.__menu, "删除分类", self.removeClassify)
         mod.utils.setMenu(self.__menu, "重命名分类", self.renemeClassify)
 
         self.__ui.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        self.__ui.customContextMenuRequested.connect(self.__showClassifyUiMenu)
+        self.__ui.customContextMenuRequested.connect(self.__showMenu)
 
-    def __showClassifyUiMenu(self, pos):
+    def __showMenu(self, pos):
         """显示分类界面菜单"""
         self.__menu.exec_(self.__ui.mapToGlobal(pos))
 
