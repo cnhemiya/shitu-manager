@@ -97,11 +97,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def openImageList(self):
         """打开图像列表"""
-        file_path = QtWidgets.QFileDialog.getOpenFileName()
-        label_path = file_path[0]
-        self.__imageListMgr.readFile(label_path)
-        self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
-        self.__setStatusBar(label_path)
+        file_path = QtWidgets.QFileDialog.getOpenFileName(initialFilter="txt(*.txt)")
+        image_list_file = file_path[0]
+        if os.path.exists(image_list_file):
+            self.__imageListMgr.readFile(image_list_file)
+            self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
+            self.__setStatusBar(image_list_file)
+
+    def saveImageList(self):
+        """保存图片列表"""
+        print("saveImageListBtn.clicked")
 
     def newIndexLibrary(self):
         print("newIndexLibraryAction.clicked")
@@ -111,10 +116,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def updateIndexLibrary(self):
         print("updateIndexLibraryAction.clicked")
-
-    def saveImageList(self):
-        """保存图片列表"""
-        print("saveImageListBtn.clicked")
 
     def __setStatusBar(self, msg: str):
         """设置状态栏信息"""
