@@ -24,6 +24,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__appMenu = QtWidgets.QMenu()
         self.__initAppMenu()  # 初始化应用菜单
 
+        self.__classifyUiMenu = QtWidgets.QMenu()
+        self.__initClassifyUiMenu()  # 初始化分类界面菜单
+
+        self.__imageListUiMenu = QtWidgets.QMenu()
+        self.__initImageListUiMenu()  # 初始化图片列表界面菜单
+
         self.__initToolBtn()
         self.__connectSignal()
         self.__initImageListViewStyle()
@@ -58,14 +64,6 @@ class MainWindow(QtWidgets.QMainWindow):
                              "./resource/remove_image.png", TOOL_BTN_ICON_SIZE)
         self.ui.removeImageBtn.clicked.connect(self.removeImage)
 
-        self.__setToolButton(self.ui.zoomOutBtn, "缩小",
-                             "./resource/zoom_out.png", TOOL_BTN_ICON_SIZE)
-        self.ui.zoomOutBtn.clicked.connect(self.zoomOut)
-
-        self.__setToolButton(self.ui.zoomInBtn, "放大",
-                             "./resource/zoom_in.png", TOOL_BTN_ICON_SIZE)
-        self.ui.zoomInBtn.clicked.connect(self.zoomIn)
-
         self.ui.searchClassifyHistoryCmb.setToolTip("查找分类历史")
         self.ui.imageZoomOutInHSlider.setToolTip("图片缩放")
 
@@ -75,53 +73,51 @@ class MainWindow(QtWidgets.QMainWindow):
         button.setIcon(QtGui.QIcon(icon_path))
         button.setIconSize(QtCore.QSize(icon_size, icon_size))
 
-    def saveImageList(self):
-        """保存图片列表"""
-        print("saveImageListBtn.clicked")
-
-    def addClassify(self):
-        """添加分类"""
-        print("addClassifyBtn.clicked")
-
-    def removeClassify(self):
-        """删除分类"""
-        print("removeClassifyBtn.clicked")
-
-    def searchClassify(self):
-        """查找分类"""
-        print("searchClassifyBtn.clicked")
-
-    def addImage(self):
-        """添加图片"""
-        print("addImageBtn.clicked")
-
-    def removeImage(self):
-        """删除图片"""
-        print("removeImageBtn.clicked")
-
-    def zoomOut(self):
-        """缩小"""
-        print("zoomOutBtn.clicked")
-
-    def zoomIn(self):
-        """放大"""
-        print("zoomInBtn.clicked")
-
     def __initAppMenu(self):
         """初始化应用菜单"""
-        self.__setAppMenu("打开图片列表", self.openImageList)
-        self.__setAppMenu("保存图片列表", self.saveImageList)
+        self.__setMenu(self.__appMenu, "打开图片列表", self.openImageList)
+        self.__setMenu(self.__appMenu, "保存图片列表", self.saveImageList)
         self.__appMenu.addSeparator()
-        self.__setAppMenu("新建索引库", self.newIndexLibrary)
-        self.__setAppMenu("打开索引库", self.openIndexLibrary)
-        self.__setAppMenu("更新索引库", self.updateIndexLibrary)
+        self.__setMenu(self.__appMenu, "新建索引库", self.newIndexLibrary)
+        self.__setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
+        self.__setMenu(self.__appMenu, "更新索引库", self.updateIndexLibrary)
 
         self.ui.appMenuBtn.setMenu(self.__appMenu)
         self.ui.appMenuBtn.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
-    def __setAppMenu(self, text: str, triggered):
-        """设置应用菜单"""
-        action = self.__appMenu.addAction(text)
+    def __initClassifyUiMenu(self):
+        """初始化分类界面菜单"""
+        self.__setMenu(self.__classifyUiMenu, "添加分类", self.addClassify)
+        self.__setMenu(self.__classifyUiMenu, "删除分类", self.removeClassify)
+        self.__setMenu(self.__classifyUiMenu, "重命名分类", self.renemeClassify)
+
+        self.ui.classifyListView.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.classifyListView.customContextMenuRequested.connect(self.__showClassifyUiMenu)
+
+    def __showClassifyUiMenu(self, pos):
+        """显示分类界面菜单"""
+        self.__classifyUiMenu.exec_(self.ui.classifyListView.mapToGlobal(pos))
+
+    def __initImageListUiMenu(self):
+        """初始化图片列表界面菜单"""
+        self.__setMenu(self.__imageListUiMenu, "添加图片", self.addImage)
+        self.__setMenu(self.__imageListUiMenu, "删除图片", self.removeImage)
+        self.__setMenu(self.__imageListUiMenu, "编辑图片分类", self.editImageClassify)
+        self.__imageListUiMenu.addSeparator()
+        self.__setMenu(self.__imageListUiMenu, "选择全部图片", self.selectAllImage)
+        self.__setMenu(self.__imageListUiMenu, "反向选择图片", self.reverseSelectImage)
+        self.__setMenu(self.__imageListUiMenu, "取消选择图片", self.cancelSelectImage)
+
+        self.ui.imageListWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.ui.imageListWidget.customContextMenuRequested.connect(self.__showImageListUiMenu)
+
+    def __showImageListUiMenu(self, pos):
+        """显示图片列表界面菜单"""
+        self.__imageListUiMenu.exec_(self.ui.imageListWidget.mapToGlobal(pos))
+
+    def __setMenu(self, menu:QtWidgets.QMenu, text: str, triggered):
+        """设置菜单"""
+        action = menu.addAction(text)
         action.triggered.connect(triggered)
 
     def __connectSignal(self):
@@ -145,6 +141,51 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def updateIndexLibrary(self):
         print("updateIndexLibraryAction.clicked")
+
+    def saveImageList(self):
+        """保存图片列表"""
+        print("saveImageListBtn.clicked")
+
+    def addClassify(self):
+        """添加分类"""
+        print("addClassifyBtn.clicked")
+
+    def removeClassify(self):
+        """删除分类"""
+        print("removeClassifyBtn.clicked")
+
+    def renemeClassify(self):
+        """重命名分类"""
+        print("renemeClassify")
+
+    def searchClassify(self):
+        """查找分类"""
+        print("searchClassifyBtn.clicked")
+
+    def addImage(self):
+        """添加图片"""
+        print("addImageBtn.clicked")
+
+    def removeImage(self):
+        """删除图片"""
+        print("removeImageBtn.clicked")
+
+    def editImageClassify(self):
+        """编辑图片分类"""
+        print("editImageClassify.clicked")
+
+    def selectAllImage(self):
+        """选择所有图片"""
+        print("selectAllImage.clicked")
+
+    def reverseSelectImage(self):
+        """反向选择图片"""
+        print("reverseSelectImage.clicked")
+
+    def cancelSelectImage(self):
+        """取消选择图片"""
+        print("cancelSelectImage.clicked")
+        # self.ui.imageListWidget.clearSelection()
 
     def setClassifyListView(self, classify_list):
         """设置分类列表"""
