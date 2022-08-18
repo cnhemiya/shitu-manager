@@ -17,7 +17,6 @@ class ClassifyUiContext(QtCore.QObject):
         self.__parent = parent
         self.__imageListMgr = image_list_mgr
         self.__menu = QtWidgets.QMenu()
-
         self.__initMenu()
 
     @property
