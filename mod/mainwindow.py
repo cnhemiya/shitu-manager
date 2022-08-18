@@ -93,15 +93,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __connectSignal(self):
         """连接信号与槽"""
-        self.ui.classifyListView.clicked.connect(self.classifyListViewClicked)
+        self.__classifyUiContext.selected.connect(self.__imageListUiContext.setImageList)
 
     def openImageList(self):
         """打开图像列表"""
         file_path = QtWidgets.QFileDialog.getOpenFileName()
-        print(file_path)
         label_path = file_path[0]
         self.__imageListMgr.readFile(label_path)
-        self.setClassifyListView(self.__imageListMgr.classifyList)
+        self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
         self.__setStatusBar(label_path)
 
     def newIndexLibrary(self):
@@ -116,25 +115,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def saveImageList(self):
         """保存图片列表"""
         print("saveImageListBtn.clicked")
-
-    def setClassifyListView(self, classify_list):
-        """设置分类列表"""
-        list_model = QtCore.QStringListModel(classify_list)
-        self.ui.classifyListView.setModel(list_model)
-
-    def setImageListView(self, image_list):
-        """设置图片列表"""
-        self.ui.imageListWidget.clear()
-        for i in image_list:
-            item = QtWidgets.QListWidgetItem(self.ui.imageListWidget)
-            item.setIcon(QtGui.QIcon(i))
-            item.setText(i)
-            self.ui.imageListWidget.addItem(item)
-
-    def classifyListViewClicked(self, index):
-        """分类列表点击事件"""
-        txt = index.data()
-        self.setImageListView(self.__imageListMgr.realPathList(txt))
 
     def __setStatusBar(self, msg: str):
         """设置状态栏信息"""

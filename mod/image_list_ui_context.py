@@ -4,7 +4,7 @@ import sys
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtGui, QtWidgets
 import mod.image_list_manager as imglistmgr
 import mod.utils
 
@@ -59,6 +59,16 @@ class ImageListUiContext(QtCore.QObject):
     def __showMenu(self, pos):
         """显示图片列表界面菜单"""
         self.__menu.exec_(self.__ui.mapToGlobal(pos))
+
+    def setImageList(self, classify:str):
+        """设置图片列表"""
+        image_list = self.__imageListMgr.realPathList(classify)
+        self.__ui.clear()
+        for i in image_list:
+            item = QtWidgets.QListWidgetItem(self.__ui)
+            item.setIcon(QtGui.QIcon(i))
+            item.setText(i)
+            self.__ui.addItem(item)
 
     def addImage(self):
         """添加图片"""

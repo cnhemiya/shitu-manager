@@ -10,6 +10,8 @@ import mod.utils
 
 
 class ClassifyUiContext(QtCore.QObject):
+    selected = QtCore.pyqtSignal(str) # 选择分类信号
+    
     def __init__(self, ui:QtWidgets.QListView, parent:QtWidgets.QMainWindow, 
                 image_list_mgr:imglistmgr.ImageListManager):
         super(ClassifyUiContext, self).__init__()
@@ -18,6 +20,7 @@ class ClassifyUiContext(QtCore.QObject):
         self.__imageListMgr = image_list_mgr
         self.__menu = QtWidgets.QMenu()
         self.__initMenu()
+        self.__connectSignal()
 
     @property
     def ui(self):
@@ -35,6 +38,10 @@ class ClassifyUiContext(QtCore.QObject):
     def menu(self):
         return self.__menu
 
+    def __connectSignal(self):
+        """连接信号"""
+        self.__ui.clicked.connect(self.uiClicked)
+
     def __initMenu(self):
         """初始化分类界面菜单"""
         mod.utils.setMenu(self.__menu, "添加分类", self.addClassify)
@@ -47,6 +54,16 @@ class ClassifyUiContext(QtCore.QObject):
     def __showMenu(self, pos):
         """显示分类界面菜单"""
         self.__menu.exec_(self.__ui.mapToGlobal(pos))
+
+    def setClassifyList(self, classify_list):
+        """设置分类列表"""
+        list_model = QtCore.QStringListModel(classify_list)
+        self.__ui.setModel(list_model)
+
+    def uiClicked(self, index):
+        """分类列表点击"""
+        txt = index.data()
+        self.selected.emit(txt)
 
     def addClassify(self):
         """添加分类"""
