@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
+from asyncore import file_dispatcher
 import os
 import sys
 
@@ -12,26 +13,11 @@ import mod.image_list_manager as imglistmgr
 
 
 def main():
-    label_path = "/home/hmy/drink_dataset_v1.0/gallery/drink_label.txt"
-    parser = imglistmgr.ImageListManager(label_path)
-    # parser.reset(label_path)
-    # print(parser.classifyList)
-    # print(parser.labelList[3])
-    print(parser.realPathList('百事可乐'))
-    print(parser.filePath)
-    print(parser.dirName)
-
-
-def dict_test():
-    img_dict = {}
-    img_dict["img_path"] = []
-    img_dict["img_path"].append("aa")
-    img_dict["img_path"].append("bb")
-    img_dict["ffff"] = []
-    # img_dict.has_key("img_path")
-    print("img_pathss" in img_dict.keys())
-
+    file_path = os.path.join(os.environ["HOME"], "drink_dataset_v1.0/gallery/drink_label_222.txt")
+    mgr = imglistmgr.ImageListManager(file_path)
+    print(mgr.findLikeClassify("伊利"))
+    # mgr.renameClassify("红牛", "红牛_222")
+    # mgr.writeFile()
 
 if __name__ == '__main__':
     main()
-    # dict_test()
