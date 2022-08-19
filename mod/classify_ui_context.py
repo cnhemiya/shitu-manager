@@ -45,7 +45,7 @@ class ClassifyUiContext(QtCore.QObject):
     def __initMenu(self):
         """初始化分类界面菜单"""
         mod.utils.setMenu(self.__menu, "添加分类", self.addClassify)
-        mod.utils.setMenu(self.__menu, "删除分类", self.removeClassify)
+        mod.utils.setMenu(self.__menu, "移除分类", self.removeClassify)
         mod.utils.setMenu(self.__menu, "重命名分类", self.renemeClassify)
 
         self.__ui.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -70,7 +70,7 @@ class ClassifyUiContext(QtCore.QObject):
         print("addClassifyBtn.called")
 
     def removeClassify(self):
-        """删除分类"""
+        """移除分类"""
         print("removeClassifyBtn.called")
 
     def renemeClassify(self):

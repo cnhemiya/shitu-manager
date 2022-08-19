@@ -54,7 +54,7 @@ class MainWindow(QtWidgets.QMainWindow):
                              "./resource/add_classify.png", TOOL_BTN_ICON_SIZE)
         self.ui.addClassifyBtn.clicked.connect(self.__classifyUiContext.addClassify)
 
-        self.__setToolButton(self.ui.removeClassifyBtn, "删除分类",
+        self.__setToolButton(self.ui.removeClassifyBtn, "移除分类",
                              "./resource/remove_classify.png", TOOL_BTN_ICON_SIZE)
         self.ui.removeClassifyBtn.clicked.connect(self.__classifyUiContext.removeClassify)
 
@@ -66,7 +66,7 @@ class MainWindow(QtWidgets.QMainWindow):
                              "./resource/add_image.png", TOOL_BTN_ICON_SIZE)
         self.ui.addImageBtn.clicked.connect(self.__imageListUiContext.addImage)
 
-        self.__setToolButton(self.ui.removeImageBtn, "删除图片",
+        self.__setToolButton(self.ui.removeImageBtn, "移除图片",
                              "./resource/remove_image.png", TOOL_BTN_ICON_SIZE)
         self.ui.removeImageBtn.clicked.connect(self.__imageListUiContext.removeImage)
 
@@ -97,7 +97,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def openImageList(self):
         """打开图像列表"""
-        file_path = QtWidgets.QFileDialog.getOpenFileName(initialFilter="txt(*.txt)")
+        file_path = QtWidgets.QFileDialog.getOpenFileName(filter="txt 文件(*.txt);;所有文件(*.*)")
         image_list_file = file_path[0]
         if os.path.exists(image_list_file):
             self.__imageListMgr.readFile(image_list_file)

@@ -46,7 +46,7 @@ class ImageListUiContext(QtCore.QObject):
     def __initMenu(self):
         """初始化图片列表界面菜单"""
         mod.utils.setMenu(self.__menu, "添加图片", self.addImage)
-        mod.utils.setMenu(self.__menu, "删除图片", self.removeImage)
+        mod.utils.setMenu(self.__menu, "移除图片", self.removeImage)
         mod.utils.setMenu(self.__menu, "编辑图片分类", self.editImageClassify)
         self.__menu.addSeparator()
         mod.utils.setMenu(self.__menu, "选择全部图片", self.selectAllImage)
@@ -62,12 +62,12 @@ class ImageListUiContext(QtCore.QObject):
 
     def setImageList(self, classify:str):
         """设置图片列表"""
-        image_list = self.__imageListMgr.realPathList(classify)
+        image_list = self.__imageListMgr.imageList(classify)
         self.__ui.clear()
         for i in image_list:
             item = QtWidgets.QListWidgetItem(self.__ui)
-            item.setIcon(QtGui.QIcon(i))
-            item.setText(i)
+            item.setIcon(QtGui.QIcon(self.__imageListMgr.realPath(i)))
+            item.setData(QtCore.Qt.UserRole, i)
             self.__ui.addItem(item)
 
     def addImage(self):
@@ -75,7 +75,7 @@ class ImageListUiContext(QtCore.QObject):
         print("addImage.clicked")
 
     def removeImage(self):
-        """删除图片"""
+        """移除图片"""
         print("removeImage.called")
 
     def editImageClassify(self):
