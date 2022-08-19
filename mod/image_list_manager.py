@@ -102,6 +102,15 @@ class ImageListManager:
         with open(file_path, "w", encoding=encoding) as f:
             f.writelines(lines)
 
+    def realPath(self, image_path: str):
+        """
+        获取真实路径
+
+        Args:
+            image_path (str): 图片路径
+        """
+        return os.path.join(self.dirName, image_path)
+
     def realPathList(self, classify:str):
         """
         获取分类下的真实路径列表
