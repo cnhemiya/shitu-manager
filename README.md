@@ -1,6 +1,12 @@
 # 依赖
 
-- pyqt5
+- PyQt5
+
+# 安装依赖
+
+```bash
+pip install PyQt5
+```
 
 # 示例数据
 
@@ -10,5 +16,9 @@
 
 - devel_doc：开发和测试文档
 - mod：模块文档，主要源代码
-- resource：工具按钮图标，来源 ElSeg
+- resource：图标，来源 ElSeg
 - ui：qt designer 界面文档
+
+# 已知缺陷
+
+- Linux 系统无法开启输入法，暂时解决方案同其它文本编辑器输入中文，然后粘贴

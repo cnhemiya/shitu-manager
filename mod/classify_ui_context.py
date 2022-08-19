@@ -10,6 +10,7 @@ import mod.utils
 import mod.ui_addclassifydialog
 import mod.ui_renameclassifydialog
 
+
 class ClassifyUiContext(QtCore.QObject):
     # 分类界面相关业务
     selected = QtCore.pyqtSignal(str) # 选择分类信号
