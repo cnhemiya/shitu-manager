@@ -94,6 +94,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __connectSignal(self):
         """连接信号与槽"""
         self.__classifyUiContext.selected.connect(self.__imageListUiContext.setImageList)
+        self.ui.searchClassifyBtn.clicked.connect(self.searchClassify)
 
     def openImageList(self):
         """打开图像列表"""
@@ -106,7 +107,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def saveImageList(self):
         """保存图片列表"""
-        print("saveImageListBtn.clicked")
+        self.__imageListMgr.writeFile()
 
     def newIndexLibrary(self):
         print("newIndexLibraryAction.clicked")
@@ -117,6 +118,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def updateIndexLibrary(self):
         print("updateIndexLibraryAction.clicked")
 
+    def searchClassify(self):
+        txt = self.ui.searchClassifyHistoryCmb.currentText()
+        if self.ui.searchClassifyHistoryCmb.currentText() != "":
+           self.ui.searchClassifyHistoryCmb.addItem(self.ui.searchClassifyHistoryCmb.currentText())
+        self.__classifyUiContext.searchClassify(txt)
+        
     def __setStatusBar(self, msg: str):
         """设置状态栏信息"""
         self.ui.statusbar.showMessage("文件路径：{}".format(msg))

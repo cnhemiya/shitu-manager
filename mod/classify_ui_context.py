@@ -71,12 +71,22 @@ class ClassifyUiContext(QtCore.QObject):
 
     def removeClassify(self):
         """移除分类"""
-        print("removeClassifyBtn.called")
+        classify = self.__ui.currentIndex().data()
+        result = QtWidgets.QMessageBox.information(self.parent, "移除分类", 
+                "确定移除分类: {}".format(classify),
+                buttons=QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel,
+                defaultButton=QtWidgets.QMessageBox.Cancel)
+        if result == QtWidgets.QMessageBox.Ok:
+            if len(self.__imageListMgr.imageList(classify)) > 0:
+                QtWidgets.QMessageBox.warning(self.parent, "移除分类", "分类下存在图片，请先移除图片")
+            else:
+                self.__imageListMgr.removeClassify(classify)
+                self.setClassifyList(self.__imageListMgr.classifyList())
 
     def renemeClassify(self):
         """重命名分类"""
         print("renemeClassify.called")
 
-    def searchClassify(self):
+    def searchClassify(self, classify):
         """查找分类"""
-        print("searchClassify.called")
+        self.setClassifyList(self.__imageListMgr.findLikeClassify(classify))
