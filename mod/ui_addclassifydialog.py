@@ -15,6 +15,7 @@ class Ui_AddClassifyDialog(object):
     def setupUi(self, AddClassifyDialog):
         AddClassifyDialog.setObjectName("AddClassifyDialog")
         AddClassifyDialog.resize(286, 127)
+        AddClassifyDialog.setModal(True)
         self.verticalLayout = QtWidgets.QVBoxLayout(AddClassifyDialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.label = QtWidgets.QLabel(AddClassifyDialog)

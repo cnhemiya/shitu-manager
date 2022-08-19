@@ -7,7 +7,8 @@ sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 from PyQt5 import QtCore, QtWidgets
 import mod.image_list_manager as imglistmgr
 import mod.utils
-
+import mod.ui_addclassifydialog
+import mod.ui_renameclassifydialog
 
 class ClassifyUiContext(QtCore.QObject):
     selected = QtCore.pyqtSignal(str) # 选择分类信号
@@ -63,20 +64,47 @@ class ClassifyUiContext(QtCore.QObject):
 
     def uiClicked(self, index):
         """分类列表点击"""
+        if not self.__ui.currentIndex().isValid():
+            return
         txt = index.data()
         self.selected.emit(txt)
 
     def uiDoubleClicked(self, index):
         """分类列表双击"""
-        txt = index.data()
-        print("uiDoubleClicked.called")
+        if not self.__ui.currentIndex().isValid():
+            return
+        ole_name = index.data()
+        dlg = QtWidgets.QDialog(parent=self.parent)
+        ui = mod.ui_renameclassifydialog.Ui_RenameClassifyDialog()
+        ui.setupUi(dlg)
+        ui.oldNameLineEdit.setText(ole_name)
+        result = dlg.exec_()
+        new_name = ui.newNameLineEdit.text()
+        if result == QtWidgets.QDialog.Accepted:
+            mgr_result = self.__imageListMgr.renameClassify(ole_name, new_name)
+            if not mgr_result:
+                QtWidgets.QMessageBox.warning(self.parent, "重命名分类", "重命名分类错误")
+            else:
+                self.setClassifyList(self.__imageListMgr.classifyList)
 
     def addClassify(self):
         """添加分类"""
-        print("addClassifyBtn.called")
+        dlg = QtWidgets.QDialog(parent=self.parent)
+        ui = mod.ui_addclassifydialog.Ui_AddClassifyDialog()
+        ui.setupUi(dlg)
+        result = dlg.exec_()
+        txt = ui.lineEdit.text()
+        if result == QtWidgets.QDialog.Accepted:
+            mgr_result = self.__imageListMgr.addClassify(txt)
+            if not mgr_result:
+                QtWidgets.QMessageBox.warning(self.parent, "添加分类", "添加分类错误")
+            else:
+                self.setClassifyList(self.__imageListMgr.classifyList)
 
     def removeClassify(self):
         """移除分类"""
+        if not self.__ui.currentIndex().isValid():
+            return
         classify = self.__ui.currentIndex().data()
         result = QtWidgets.QMessageBox.information(self.parent, "移除分类", 
                 "确定移除分类: {}".format(classify),
@@ -91,7 +119,9 @@ class ClassifyUiContext(QtCore.QObject):
 
     def renemeClassify(self):
         """重命名分类"""
-        self.uiDoubleClicked(self.__ui.currentIndex())
+        idx = self.__ui.currentIndex()
+        if idx.isValid():
+            self.uiDoubleClicked(idx)
 
     def searchClassify(self, classify):
         """查找分类"""
