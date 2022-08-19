@@ -15,17 +15,21 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="oldlabel">
      <property name="text">
       <string>原名称</string>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="oldNameLineEdit"/>
+    <widget class="QLineEdit" name="oldNameLineEdit">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+    </widget>
    </item>
    <item>
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="newlabel">
      <property name="text">
       <string>新名称</string>
      </property>

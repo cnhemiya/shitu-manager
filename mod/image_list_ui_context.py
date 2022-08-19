@@ -7,6 +7,7 @@ sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 from PyQt5 import QtCore, QtGui, QtWidgets
 import mod.image_list_manager as imglistmgr
 import mod.utils
+import mod.ui_renameclassifydialog
 
 
 class ImageListUiContext(QtCore.QObject):

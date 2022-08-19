@@ -17,15 +17,16 @@ class Ui_RenameClassifyDialog(object):
         RenameClassifyDialog.resize(342, 194)
         self.verticalLayout = QtWidgets.QVBoxLayout(RenameClassifyDialog)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(RenameClassifyDialog)
-        self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
+        self.oldlabel = QtWidgets.QLabel(RenameClassifyDialog)
+        self.oldlabel.setObjectName("oldlabel")
+        self.verticalLayout.addWidget(self.oldlabel)
         self.oldNameLineEdit = QtWidgets.QLineEdit(RenameClassifyDialog)
+        self.oldNameLineEdit.setEnabled(False)
         self.oldNameLineEdit.setObjectName("oldNameLineEdit")
         self.verticalLayout.addWidget(self.oldNameLineEdit)
-        self.label_2 = QtWidgets.QLabel(RenameClassifyDialog)
-        self.label_2.setObjectName("label_2")
-        self.verticalLayout.addWidget(self.label_2)
+        self.newlabel = QtWidgets.QLabel(RenameClassifyDialog)
+        self.newlabel.setObjectName("newlabel")
+        self.verticalLayout.addWidget(self.newlabel)
         self.newNameLineEdit = QtWidgets.QLineEdit(RenameClassifyDialog)
         self.newNameLineEdit.setObjectName("newNameLineEdit")
         self.verticalLayout.addWidget(self.newNameLineEdit)
@@ -45,8 +46,8 @@ class Ui_RenameClassifyDialog(object):
     def retranslateUi(self, RenameClassifyDialog):
         _translate = QtCore.QCoreApplication.translate
         RenameClassifyDialog.setWindowTitle(_translate("RenameClassifyDialog", "重命名分类"))
-        self.label.setText(_translate("RenameClassifyDialog", "原名称"))
-        self.label_2.setText(_translate("RenameClassifyDialog", "新名称"))
+        self.oldlabel.setText(_translate("RenameClassifyDialog", "原名称"))
+        self.newlabel.setText(_translate("RenameClassifyDialog", "新名称"))
 
 
 if __name__ == "__main__":
