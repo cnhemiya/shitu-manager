@@ -41,6 +41,7 @@ class ClassifyUiContext(QtCore.QObject):
     def __connectSignal(self):
         """连接信号"""
         self.__ui.clicked.connect(self.uiClicked)
+        self.__ui.doubleClicked.connect(self.uiDoubleClicked)
 
     def __initMenu(self):
         """初始化分类界面菜单"""
@@ -65,6 +66,11 @@ class ClassifyUiContext(QtCore.QObject):
         txt = index.data()
         self.selected.emit(txt)
 
+    def uiDoubleClicked(self, index):
+        """分类列表双击"""
+        txt = index.data()
+        print("uiDoubleClicked.called")
+
     def addClassify(self):
         """添加分类"""
         print("addClassifyBtn.called")
@@ -85,7 +91,7 @@ class ClassifyUiContext(QtCore.QObject):
 
     def renemeClassify(self):
         """重命名分类"""
-        print("renemeClassify.called")
+        self.uiDoubleClicked(self.__ui.currentIndex())
 
     def searchClassify(self, classify):
         """查找分类"""
