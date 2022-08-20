@@ -161,7 +161,7 @@
            </spacer>
           </item>
           <item>
-           <widget class="QSlider" name="imageZoomOutInHSlider">
+           <widget class="QSlider" name="imageScaleSlider">
             <property name="maximumSize">
              <size>
               <width>400</width>
