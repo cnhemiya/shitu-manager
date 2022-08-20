@@ -1,4 +1,5 @@
 import os
+from stat import filemode
 import sys
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
@@ -9,7 +10,7 @@ import mod.image_list_manager as imglistmgr
 import mod.utils
 import mod.ui_renameclassifydialog
 
-# 基本图像大小
+# 图像缩放基数
 BASE_IMAGE_SIZE = 64
 
 
@@ -46,7 +47,6 @@ class ImageListUiContext(QtCore.QObject):
     def __initUi(self):
         """初始化图片列表样式"""
         self.__ui.setViewMode(QtWidgets.QListView.IconMode)
-        # self.__ui.setIconSize(QtCore.QSize(320, 320))
         self.__ui.setSpacing(15)
         self.__ui.setMovement(QtWidgets.QListView.Static)
         self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
@@ -91,7 +91,26 @@ class ImageListUiContext(QtCore.QObject):
 
     def addImage(self):
         """添加图片"""
-        print("addImage.clicked")
+        filter = "图片 (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG);;所有文件(*.*)"
+        dlg = QtWidgets.QFileDialog(self.__parent)
+        dlg.setFileMode(QtWidgets.QFileDialog.ExistingFiles) # 多选文件
+        dlg.setViewMode(QtWidgets.QFileDialog.Detail) # 详细模式
+        file_paths = dlg.getOpenFileNames(filter=filter)[0]
+        if len(file_paths) == 0:
+            return
+        image_list_dir = self.__imageListMgr.dirName
+        file_list = []
+        for path in file_paths:
+            if not os.path.exists(path):
+                continue
+            if image_list_dir in path:
+                # 去掉 image_list_dir 的路径和斜杠
+                begin = len(image_list_dir) + 1
+                file_list.append(path[begin:])
+        if len(file_list) > 0:
+            new_list = self.__imageListMgr.imageList(self.__selectedClassify) + file_list
+            self.__imageListMgr.resetImageList(self.__selectedClassify, new_list)
+            self.setImageList(self.__selectedClassify)
 
     def removeImage(self):
         """移除图片"""

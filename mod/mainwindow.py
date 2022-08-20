@@ -108,8 +108,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def openImageList(self):
         """打开图像列表"""
-        file_path = QtWidgets.QFileDialog.getOpenFileName(filter="txt 文件(*.txt);;所有文件(*.*)")
-        image_list_file = file_path[0]
+        image_list_file = QtWidgets.QFileDialog.getOpenFileName(filter="txt 文件(*.txt);;所有文件(*.*)")[0]
         if os.path.exists(image_list_file):
             self.__imageListMgr.readFile(image_list_file)
             self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
