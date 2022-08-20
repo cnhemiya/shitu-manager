@@ -22,7 +22,6 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
         self.ui = mod.ui_mainwindow.Ui_MainWindow()
         self.ui.setupUi(self)  # 初始化主窗口界面
-        self.resize(1280, 720)
 
         self.__imageListMgr = mod.image_list_manager.ImageListManager()
 
@@ -38,8 +37,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 ui=self.ui.imageListWidget, parent=self, image_list_mgr=self.__imageListMgr)
 
         self.__initToolBtn()
+        self.__initSplitter()
         self.__connectSignal()
-        
+
+    def __initSplitter(self):
+        """初始化分割窗口"""
+        self.ui.splitter.setStretchFactor(0, 20)
+        self.ui.splitter.setStretchFactor(1, 80)
 
     def __initToolBtn(self):
         """初始化工具按钮"""
