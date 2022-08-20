@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>655</width>
-    <height>450</height>
+    <width>833</width>
+    <height>538</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -28,6 +28,9 @@
       </property>
       <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetDefaultConstraint</enum>
+        </property>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
@@ -72,6 +75,18 @@
               <horstretch>0</horstretch>
               <verstretch>0</verstretch>
              </sizepolicy>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>400</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>400</width>
+              <height>0</height>
+             </size>
             </property>
             <property name="editable">
              <bool>true</bool>
@@ -147,11 +162,20 @@
           </item>
           <item>
            <widget class="QSlider" name="imageZoomOutInHSlider">
+            <property name="maximumSize">
+             <size>
+              <width>400</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="minimum">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="maximum">
-             <number>19</number>
+             <number>10</number>
+            </property>
+            <property name="pageStep">
+             <number>2</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -162,6 +186,12 @@
         </item>
         <item>
          <widget class="QListWidget" name="imageListWidget">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
             <width>200</width>
