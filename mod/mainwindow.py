@@ -37,13 +37,18 @@ class MainWindow(QtWidgets.QMainWindow):
                 ui=self.ui.imageListWidget, parent=self, image_list_mgr=self.__imageListMgr)
 
         self.__initToolBtn()
-        self.__initSplitter()
         self.__connectSignal()
+        self.__initUI()
 
-    def __initSplitter(self):
-        """初始化分割窗口"""
+    def __initUI(self):
+        """初始化界面"""
+        # 初始化分割窗口
         self.ui.splitter.setStretchFactor(0, 20)
         self.ui.splitter.setStretchFactor(1, 80)
+
+        # 初始化图像缩放
+        self.ui.imageScaleSlider.setValue(4)
+
 
     def __initToolBtn(self):
         """初始化工具按钮"""
@@ -75,7 +80,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.removeImageBtn.clicked.connect(self.__imageListUiContext.removeImage)
 
         self.ui.searchClassifyHistoryCmb.setToolTip("查找分类历史")
-        self.ui.imageZoomOutInHSlider.setToolTip("图片缩放")
+        self.ui.imageScaleSlider.setToolTip("图片缩放")
 
     def __setToolButton(self, button, tool_tip: str, icon_path: str, icon_size: int):
         """设置工具按钮"""
@@ -99,6 +104,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """连接信号与槽"""
         self.__classifyUiContext.selected.connect(self.__imageListUiContext.setImageList)
         self.ui.searchClassifyBtn.clicked.connect(self.searchClassify)
+        self.ui.imageScaleSlider.valueChanged.connect(self.__imageListUiContext.setImageScale)
 
     def openImageList(self):
         """打开图像列表"""

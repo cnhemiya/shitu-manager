@@ -9,6 +9,9 @@ import mod.image_list_manager as imglistmgr
 import mod.utils
 import mod.ui_renameclassifydialog
 
+# 基本图像大小
+BASE_IMAGE_SIZE = 64
+
 
 class ImageListUiContext(QtCore.QObject):
     # 图片列表界面相关业务
@@ -22,6 +25,7 @@ class ImageListUiContext(QtCore.QObject):
         self.__menu = QtWidgets.QMenu()
         self.__initMenu()
         self.__selectedClassify = ""
+        self.__imageScale = 1
 
     @property
     def ui(self):
@@ -42,7 +46,7 @@ class ImageListUiContext(QtCore.QObject):
     def __initUi(self):
         """初始化图片列表样式"""
         self.__ui.setViewMode(QtWidgets.QListView.IconMode)
-        self.__ui.setIconSize(QtCore.QSize(320, 320))
+        # self.__ui.setIconSize(QtCore.QSize(320, 320))
         self.__ui.setSpacing(15)
         self.__ui.setMovement(QtWidgets.QListView.Static)
         self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
@@ -63,8 +67,18 @@ class ImageListUiContext(QtCore.QObject):
         """显示图片列表界面菜单"""
         self.__menu.exec_(self.__ui.mapToGlobal(pos))
 
+    def setImageScale(self, scale:int):
+        """设置图片大小"""
+        self.__imageScale = scale
+        size = QtCore.QSize(scale * BASE_IMAGE_SIZE, scale * BASE_IMAGE_SIZE)
+        self.__ui.setIconSize(size)
+        for i in range(self.__ui.count()):
+            item = self.__ui.item(i)
+            item.setSizeHint(size)
+
     def setImageList(self, classify:str):
         """设置图片列表"""
+        size = QtCore.QSize(self.__imageScale * BASE_IMAGE_SIZE, self.__imageScale * BASE_IMAGE_SIZE)
         self.__selectedClassify = classify
         image_list = self.__imageListMgr.imageList(classify)
         self.__ui.clear()
@@ -72,6 +86,7 @@ class ImageListUiContext(QtCore.QObject):
             item = QtWidgets.QListWidgetItem(self.__ui)
             item.setIcon(QtGui.QIcon(self.__imageListMgr.realPath(i)))
             item.setData(QtCore.Qt.UserRole, i)
+            item.setSizeHint(size)
             self.__ui.addItem(item)
 
     def addImage(self):

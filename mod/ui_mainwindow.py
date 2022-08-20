@@ -88,7 +88,7 @@ class Ui_MainWindow(object):
         self.imageScaleSlider = QtWidgets.QSlider(self.layoutWidget1)
         self.imageScaleSlider.setMaximumSize(QtCore.QSize(400, 16777215))
         self.imageScaleSlider.setMinimum(1)
-        self.imageScaleSlider.setMaximum(10)
+        self.imageScaleSlider.setMaximum(8)
         self.imageScaleSlider.setPageStep(2)
         self.imageScaleSlider.setOrientation(QtCore.Qt.Horizontal)
         self.imageScaleSlider.setObjectName("imageScaleSlider")
