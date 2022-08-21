@@ -130,9 +130,17 @@ class MainWindow(QtWidgets.QMainWindow):
         print("updateIndexLibraryAction.clicked")
 
     def searchClassify(self):
-        txt = self.ui.searchClassifyHistoryCmb.currentText()
-        if self.ui.searchClassifyHistoryCmb.currentText() != "":
-           self.ui.searchClassifyHistoryCmb.addItem(self.ui.searchClassifyHistoryCmb.currentText())
+        """查找分类"""
+        cmb = self.ui.searchClassifyHistoryCmb
+        txt = cmb.currentText()
+        is_has = False
+        if cmb.currentText() != "":
+            for i in range(cmb.count()):
+                if cmb.itemText(i) == txt:
+                    is_has = True
+                    break
+            if not is_has:
+                cmb.addItem(txt)
         self.__classifyUiContext.searchClassify(txt)
 
     def exitApp(self):
