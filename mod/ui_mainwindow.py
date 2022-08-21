@@ -101,6 +101,8 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.imageListWidget.sizePolicy().hasHeightForWidth())
         self.imageListWidget.setSizePolicy(sizePolicy)
         self.imageListWidget.setMinimumSize(QtCore.QSize(200, 0))
+        self.imageListWidget.setStyleSheet("QListWidget::Item:hover{background:skyblue;padding-top:0px; padding-bottom:0px;}\n"
+"QListWidget::item:selected{background:rgb(245, 121, 0); color:red;}")
         self.imageListWidget.setObjectName("imageListWidget")
         self.verticalLayout.addWidget(self.imageListWidget)
         self.horizontalLayout_3.addWidget(self.splitter)
