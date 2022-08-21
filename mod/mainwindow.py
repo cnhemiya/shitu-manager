@@ -134,7 +134,7 @@ class MainWindow(QtWidgets.QMainWindow):
         cmb = self.ui.searchClassifyHistoryCmb
         txt = cmb.currentText()
         is_has = False
-        if cmb.currentText() != "":
+        if txt != "":
             for i in range(cmb.count()):
                 if cmb.itemText(i) == txt:
                     is_has = True
