@@ -138,9 +138,25 @@ class ImageListUiContext(QtCore.QObject):
         if result == QtWidgets.QDialog.Accepted \
                 and new_classify != old_classify \
                 and new_classify != "":
-            print(old_classify)
-            print(new_classify)
+            self.__moveImage(old_classify, new_classify)
 
+    def __moveImage(self, old_classify, new_classify):
+        """移动图片"""
+        keep_list = []
+        is_selected = False
+        move_list = self.__imageListMgr.imageList(new_classify)
+        for i in range(self.__ui.count()):
+            item = self.__ui.item(i)
+            txt = item.data(QtCore.Qt.UserRole)
+            if item.isSelected():
+                move_list.append(txt)
+                is_selected = True
+            else:
+                keep_list.append(txt)
+        if is_selected:
+            self.__imageListMgr.resetImageList(new_classify, move_list)
+            self.__imageListMgr.resetImageList(old_classify, keep_list)
+            self.setImageList(old_classify)
 
     def selectAllImage(self):
         """选择所有图片"""
