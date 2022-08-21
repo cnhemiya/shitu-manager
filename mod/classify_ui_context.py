@@ -62,7 +62,8 @@ class ClassifyUiContext(QtCore.QObject):
 
     def __showMenu(self, pos):
         """显示分类界面菜单"""
-        self.__menu.exec_(self.__ui.mapToGlobal(pos))
+        if len(self.__imageListMgr.filePath) > 0:
+            self.__menu.exec_(self.__ui.mapToGlobal(pos))
 
     def setClassifyList(self, classify_list):
         """设置分类列表"""

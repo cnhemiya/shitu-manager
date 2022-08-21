@@ -19,9 +19,14 @@ class ImageEditClassifyDialog(QtWidgets.QDialog):
         self.ui.setupUi(self)  # 初始化主窗口界面
         self.__oldClassify = old_classify
         self.__classifyList = classify_list
+        self.__newClassify = ""
         self.__searchResult = []
         self.__initUi()
         self.__connectSignal()
+
+    @property
+    def newClassify(self):
+        return self.__newClassify
 
     def __initUi(self):
         self.ui.oldLineEdit.setText(self.__oldClassify)
@@ -41,6 +46,7 @@ class ImageEditClassifyDialog(QtWidgets.QDialog):
             return
         txt = index.data()
         self.ui.newLineEdit.setText(txt)
+        self.__newClassify = txt
 
     def searchClassify(self):
         txt = self.ui.searchWordLineEdit.text()

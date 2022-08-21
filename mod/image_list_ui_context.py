@@ -66,7 +66,8 @@ class ImageListUiContext(QtCore.QObject):
 
     def __showMenu(self, pos):
         """显示图片列表界面菜单"""
-        self.__menu.exec_(self.__ui.mapToGlobal(pos))
+        if len(self.__imageListMgr.filePath) > 0:
+            self.__menu.exec_(self.__ui.mapToGlobal(pos))
 
     def setImageScale(self, scale:int):
         """设置图片大小"""
@@ -128,10 +129,18 @@ class ImageListUiContext(QtCore.QObject):
 
     def editImageClassify(self):
         """编辑图片分类"""
+        old_classify = self.__selectedClassify
         dlg = mod.imageeditclassifydialog.ImageEditClassifyDialog(parent=self.__parent,
-                        old_classify=self.__selectedClassify,
+                        old_classify=old_classify,
                         classify_list=self.__imageListMgr.classifyList)
-        dlg.exec_()
+        result = dlg.exec_()
+        new_classify = dlg.newClassify
+        if result == QtWidgets.QDialog.Accepted \
+                and new_classify != old_classify \
+                and new_classify != "":
+            print(old_classify)
+            print(new_classify)
+
 
     def selectAllImage(self):
         """选择所有图片"""
