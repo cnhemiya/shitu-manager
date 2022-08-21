@@ -52,6 +52,7 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.searchClassifyHistoryCmb.sizePolicy().hasHeightForWidth())
         self.searchClassifyHistoryCmb.setSizePolicy(sizePolicy)
+        self.searchClassifyHistoryCmb.setMinimumSize(QtCore.QSize(200, 0))
         self.searchClassifyHistoryCmb.setMaximumSize(QtCore.QSize(400, 16777215))
         self.searchClassifyHistoryCmb.setBaseSize(QtCore.QSize(400, 0))
         self.searchClassifyHistoryCmb.setEditable(True)
@@ -116,7 +117,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "识图"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "识图图像库管理"))
         self.appMenuBtn.setText(_translate("MainWindow", "..."))
         self.saveImageListBtn.setText(_translate("MainWindow", "..."))
         self.addClassifyBtn.setText(_translate("MainWindow", "..."))
