@@ -142,7 +142,8 @@ class ImageListManager:
         """
         self.__findLikeClassifyResult.clear()
         for classify in self.__dataList.keys():
-            if name in classify:
+            word = str(name)
+            if (word in classify):
                 self.__findLikeClassifyResult.append(classify)
         return self.__findLikeClassifyResult
 
