@@ -96,6 +96,8 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "新建索引库", self.newIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "更新索引库", self.updateIndexLibrary)
+        self.__appMenu.addSeparator()
+        mod.utils.setMenu(self.__appMenu, "退出", self.exitApp)
 
         self.ui.appMenuBtn.setMenu(self.__appMenu)
         self.ui.appMenuBtn.setPopupMode(QtWidgets.QToolButton.InstantPopup)
@@ -132,6 +134,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.ui.searchClassifyHistoryCmb.currentText() != "":
            self.ui.searchClassifyHistoryCmb.addItem(self.ui.searchClassifyHistoryCmb.currentText())
         self.__classifyUiContext.searchClassify(txt)
+
+    def exitApp(self):
+        """退出应用"""
+        os._exit(0)
         
     def __setStatusBar(self, msg: str):
         """设置状态栏信息"""
