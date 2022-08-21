@@ -23,6 +23,7 @@ class ClassifyUiContext(QtCore.QObject):
         self.__imageListMgr = image_list_mgr
         self.__menu = QtWidgets.QMenu()
         self.__initMenu()
+        self.__initUi()
         self.__connectSignal()
 
     @property
@@ -40,6 +41,10 @@ class ClassifyUiContext(QtCore.QObject):
     @property
     def menu(self):
         return self.__menu
+
+    def __initUi(self):
+        """初始化分类界面"""
+        self.__ui.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def __connectSignal(self):
         """连接信号"""

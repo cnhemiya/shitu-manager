@@ -9,6 +9,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import mod.image_list_manager as imglistmgr
 import mod.utils
 import mod.ui_renameclassifydialog
+import mod.imageeditclassifydialog
 
 # 图像缩放基数
 BASE_IMAGE_SIZE = 64
@@ -127,7 +128,10 @@ class ImageListUiContext(QtCore.QObject):
 
     def editImageClassify(self):
         """编辑图片分类"""
-        print("editImageClassify.called")
+        dlg = mod.imageeditclassifydialog.ImageEditClassifyDialog(parent=self.__parent,
+                        old_classify=self.__selectedClassify,
+                        classify_list=self.__imageListMgr.classifyList)
+        dlg.exec_()
 
     def selectAllImage(self):
         """选择所有图片"""
