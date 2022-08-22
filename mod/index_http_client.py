@@ -17,6 +17,8 @@ class IndexHttpClient():
 
     def new_index(self, image_list_path: str, index_root_path: str, index_method = "HNSW32", force = False):
         """新建 重建 库"""
+        if index_method not in ["HNSW32", "FLAT", "IVF"]:
+            raise Exception("index_method 必须是 HNSW32, FLAT, IVF，实际值为：{}".format(index_method))
         params = {"image_list_path":image_list_path, \
             "index_root_path":index_root_path, \
             "index_method":index_method, \
