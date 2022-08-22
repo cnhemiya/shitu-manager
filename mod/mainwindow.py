@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "打开图像库", self.openImageLibrary)
         mod.utils.setMenu(self.__appMenu, "保存图像库", self.saveImageLibrary)
         self.__appMenu.addSeparator()
-        mod.utils.setMenu(self.__appMenu, "新建索引库", self.newIndexLibrary)
+        mod.utils.setMenu(self.__appMenu, "新建/重建 索引库", self.newIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "更新索引库", self.updateIndexLibrary)
         self.__appMenu.addSeparator()

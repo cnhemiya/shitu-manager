@@ -16,7 +16,7 @@ def fileMD5(file_path: str):
     md5 = hashlib.md5()
     with open(file_path, 'rb') as f:
         md5.update(f.read())
-    return md5.hexdigest()
+    return md5.hexdigest().lower()
 
 def copyFile(from_path: str, to_path: str):
     """复制文件"""
