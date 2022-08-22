@@ -16,7 +16,7 @@ BASE_IMAGE_SIZE = 64
 
 
 class ImageListUiContext(QtCore.QObject):
-    # 图片列表界面相关业务
+    # 图片列表界面相关业务，style sheet 在 MainWindow.ui 相应的 ImageListWidget 中设置
     def __init__(self, ui:QtWidgets.QListWidget, parent:QtWidgets.QMainWindow, 
                 image_list_mgr:imglistmgr.ImageListManager):
         super(ImageListUiContext, self).__init__()

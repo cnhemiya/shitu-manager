@@ -21,7 +21,7 @@ class Ui_NewlibraryDialog(object):
         self.label.setObjectName("label")
         self.verticalLayout.addWidget(self.label)
         self.indexMethodCmb = QtWidgets.QComboBox(NewlibraryDialog)
-        self.indexMethodCmb.setEnabled(False)
+        self.indexMethodCmb.setEnabled(True)
         self.indexMethodCmb.setObjectName("indexMethodCmb")
         self.indexMethodCmb.addItem("")
         self.indexMethodCmb.addItem("")

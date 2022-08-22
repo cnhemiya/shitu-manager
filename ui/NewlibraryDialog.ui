@@ -24,7 +24,7 @@
    <item>
     <widget class="QComboBox" name="indexMethodCmb">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="currentIndex">
       <number>0</number>

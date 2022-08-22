@@ -10,8 +10,9 @@ __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
 
-data = {'error_message': "eerroo"}
-host = ('localhost', 8000)
+data = {"error_message": None}
+# data = {"error_message": "出错啦！！！"}
+host = ("localhost", 8000)
 
 
 class Resquest(BaseHTTPRequestHandler):

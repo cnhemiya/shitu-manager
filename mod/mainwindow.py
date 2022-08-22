@@ -9,10 +9,14 @@ import mod.ui_mainwindow
 import mod.image_list_manager
 import mod.classify_ui_context
 import mod.image_list_ui_context
+import mod.ui_newlibrarydialog
+import mod.index_http_client
 import mod.utils
 
 
 TOOL_BTN_ICON_SIZE = 64
+DEFAULT_HOST = "localhost"
+DEFAULT_PORT = 8000
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -114,10 +118,10 @@ class MainWindow(QtWidgets.QMainWindow):
         dir_path = self.__openDirDialog("新建图像库")
         if dir_path != None:
             if not mod.utils.isEmptyDir(dir_path):
-                QtWidgets.QMessageBox.warning(self, "警告", "该目录不为空，请选择空目录")
+                QtWidgets.QMessageBox.warning(self, "错误", "该目录不为空，请选择空目录")
                 return
             if not mod.utils.initLibrary(dir_path):
-                QtWidgets.QMessageBox.warning(self, "警告", "新建图像库失败")
+                QtWidgets.QMessageBox.warning(self, "错误", "新建图像库失败")
                 return
             self.__imageListMgr.readFile(os.path.join(dir_path, "image_list.txt"))
 
@@ -151,13 +155,69 @@ class MainWindow(QtWidgets.QMainWindow):
             self.__setStatusBar(self.__imageListMgr.filePath)
 
     def newIndexLibrary(self):
-        print("newIndexLibraryAction.clicked")
+        """新建重建索引库"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+            return
+        dlg = QtWidgets.QDialog(self)
+        ui = mod.ui_newlibrarydialog.Ui_NewlibraryDialog()
+        ui.setupUi(dlg)
+        result = dlg.exec_()
+        index_method = ui.indexMethodCmb.currentText()
+        force = ui.resetCheckBox.isChecked()
+        if result == QtWidgets.QDialog.Accepted:
+            try:
+                client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
+                err_msg = client.new_index(image_list_path="image_list.txt", 
+                        index_root_path=self.__imageListMgr.dirName, 
+                        index_method=index_method, 
+                        force=force)
+                if err_msg == None:
+                    QtWidgets.QMessageBox.information(self, "提示", "新建/重建 索引库成功")
+                    return
+                else:
+                    QtWidgets.QMessageBox.warning(self, "错误", err_msg)
+                    return
+            except Exception as e:
+                QtWidgets.QMessageBox.warning(self, "错误", str(e))
+                return
 
     def openIndexLibrary(self):
-        print("openIndexLibraryAction.clicked")
+        """打开索引库"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+            return
+        try:
+            client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
+            err_msg = client.open_index(index_root_path=self.__imageListMgr.dirName)
+            if err_msg == None:
+                QtWidgets.QMessageBox.information(self, "提示", "打开索引库成功")
+                return
+            else:
+                QtWidgets.QMessageBox.warning(self, "错误", err_msg)
+                return
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "错误", str(e))
+            return    
 
     def updateIndexLibrary(self):
-        print("updateIndexLibraryAction.clicked")
+        """更新索引库"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+            return
+        try:
+            client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
+            err_msg = client.update_images(image_list_path="image_list.txt", 
+                        index_root_path=self.__imageListMgr.dirName)
+            if err_msg == None:
+                QtWidgets.QMessageBox.information(self, "提示", "更新索引库成功")
+                return
+            else:
+                QtWidgets.QMessageBox.warning(self, "错误", err_msg)
+                return
+        except Exception as e:
+            QtWidgets.QMessageBox.warning(self, "错误", str(e))
+            return   
 
     def searchClassify(self):
         """查找分类"""
