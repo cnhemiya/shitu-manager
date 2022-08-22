@@ -4,13 +4,11 @@ import sys
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
-from PyQt5 import QtCore, QtGui, QtWidgets
 import requests
-import http.client
+
 
 class IndexHttpClient():
     def __init__(self, host: str, port: int):
-        # super(IndexHttpClient, self).__init__()
         self.__host = host
         self.__port = port
 
