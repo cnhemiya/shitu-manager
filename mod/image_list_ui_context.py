@@ -105,14 +105,30 @@ class ImageListUiContext(QtCore.QObject):
         for path in file_paths:
             if not os.path.exists(path):
                 continue
-            if image_list_dir in path:
+            new_file = self.__copyToImagesDir(path)
+            if new_file != "" and image_list_dir in new_file:
                 # 去掉 image_list_dir 的路径和斜杠
                 begin = len(image_list_dir) + 1
-                file_list.append(path[begin:])
+                file_list.append(new_file[begin:])
         if len(file_list) > 0:
+            if self.__selectedClassify == "":
+                QtWidgets.QMessageBox.warning(self.__parent, "提示", "请先选择分类")
+                return
             new_list = self.__imageListMgr.imageList(self.__selectedClassify) + file_list
             self.__imageListMgr.resetImageList(self.__selectedClassify, new_list)
             self.setImageList(self.__selectedClassify)
+            self.__imageListMgr.writeFile()
+
+    def __copyToImagesDir(self, image_path: str):
+        md5 = mod.utils.fileMD5(image_path)
+        file_ext = mod.utils.fileExtension(image_path)
+        to_dir = os.path.join(self.__imageListMgr.dirName, "images")
+        new_path = os.path.join(to_dir, md5 + file_ext)
+        if os.path.exists(to_dir):
+            mod.utils.copyFile(image_path, new_path)
+            return new_path
+        else:
+            return ""
 
     def removeImage(self):
         """移除图片"""
@@ -120,12 +136,20 @@ class ImageListUiContext(QtCore.QObject):
         image_list = self.__ui.selectedItems()
         if len(image_list) == 0:
             return
+        question = QtWidgets.QMessageBox.question(self.__parent, "移除图片", "确定移除所选图片吗？")
+        if question == QtWidgets.QMessageBox.No:
+            return
         for i in range(self.__ui.count()):
             item = self.__ui.item(i)
+            img_path = item.data(QtCore.Qt.UserRole)
             if not item.isSelected():
-                path_list.append(item.data(QtCore.Qt.UserRole))
+                path_list.append(img_path)
+            else:
+                # 从磁盘上删除图片
+                mod.utils.removeFile(os.path.join(self.__imageListMgr.dirName, img_path))
         self.__imageListMgr.resetImageList(self.__selectedClassify, path_list)
         self.setImageList(self.__selectedClassify)
+        self.__imageListMgr.writeFile()
 
     def editImageClassify(self):
         """编辑图片分类"""

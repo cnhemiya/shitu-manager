@@ -1,6 +1,8 @@
 import os
 import sys
 
+from devel_doc.test import isEmptyDir
+
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
@@ -90,6 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __initAppMenu(self):
         """初始化应用菜单"""
+        mod.utils.setMenu(self.__appMenu, "新建图像库", self.newImageLibrary)
         mod.utils.setMenu(self.__appMenu, "打开图片列表", self.openImageList)
         mod.utils.setMenu(self.__appMenu, "保存图片列表", self.saveImageList)
         self.__appMenu.addSeparator()
@@ -107,6 +110,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__classifyUiContext.selected.connect(self.__imageListUiContext.setImageList)
         self.ui.searchClassifyBtn.clicked.connect(self.searchClassify)
         self.ui.imageScaleSlider.valueChanged.connect(self.__imageListUiContext.setImageScale)
+
+    def newImageLibrary(self):
+        """新建图像库"""
+        dlg = QtWidgets.QFileDialog(self)
+        dlg.setWindowTitle("新建图像库")
+        dlg.setOption(QtWidgets.QFileDialog.ShowDirsOnly, True)
+        dlg.setFileMode(QtWidgets.QFileDialog.Directory)
+        dlg.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
+        if dlg.exec_() == QtWidgets.QDialog.Accepted:
+            dir_path = dlg.selectedFiles()[0]
+            if not mod.utils.isEmptyDir(dir_path):
+                QtWidgets.QMessageBox.warning(self, "警告", "该目录不为空，请选择空目录")
+                return
+            if not mod.utils.initLibrary(dir_path):
+                QtWidgets.QMessageBox.warning(self, "警告", "新建图像库失败")
+                return
+            self.__imageListMgr.readFile(os.path.join(dir_path, "image_list.txt"))
 
     def openImageList(self):
         """打开图像列表"""

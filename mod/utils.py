@@ -40,7 +40,11 @@ def newFile(file_path: str):
     else:
         with open(file_path, 'w') as f:
             pass
-        return True 
+        return True
+
+def isEmptyDir(dir_path: str):
+    """判断目录是否为空"""
+    return not os.listdir(dir_path)
 
 def initLibrary(dir_path: str):
     """初始化库"""
@@ -50,4 +54,3 @@ def initLibrary(dir_path: str):
     image_list_path = os.path.join(dir_path, "image_list.txt")
     newFile(image_list_path)
     return os.path.exists(dir_path)
-    
