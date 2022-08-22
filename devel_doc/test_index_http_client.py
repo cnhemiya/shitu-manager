@@ -13,7 +13,9 @@ import mod.index_http_client
 def main():
     client = mod.index_http_client.IndexHttpClient("127.0.0.1", 8000)
     # print(client.url())
-    client.updateImages("qq.txt", "/home/hmy/11")
+    # client.update_images("image_list.txt", "/home/user_home/test_lib")
+    # client.open_index("/home/user_home/test_lib")
+    client.new_index("image_list.txt", "/home/user_home/test_lib", "HNSW32", True)
 
 if __name__ == '__main__':
     main()
