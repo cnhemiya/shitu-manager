@@ -57,9 +57,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__setToolButton(self.ui.appMenuBtn, "应用菜单",
                              "./resource/app_menu.png", TOOL_BTN_ICON_SIZE)
 
-        self.__setToolButton(self.ui.saveImageListBtn, "保存图像库",
-                             "./resource/save_image_list.png", TOOL_BTN_ICON_SIZE)
-        self.ui.saveImageListBtn.clicked.connect(self.saveImageLibrary)
+        self.__setToolButton(self.ui.saveImageLibraryBtn, "保存图像库",
+                             "./resource/save_image_Library.png", TOOL_BTN_ICON_SIZE)
+        self.ui.saveImageLibraryBtn.clicked.connect(self.saveImageLibrary)
 
         self.__setToolButton(self.ui.addClassifyBtn, "添加分类",
                              "./resource/add_classify.png", TOOL_BTN_ICON_SIZE)
@@ -148,7 +148,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def saveImageLibrary(self):
         """保存图像库"""
-        self.__imageListMgr.writeFile()
+        if os.path.exists(self.__imageListMgr.filePath):
+            self.__imageListMgr.writeFile()
+            self.__setStatusBar(self.__imageListMgr.filePath)
 
     def newIndexLibrary(self):
         print("newIndexLibraryAction.clicked")

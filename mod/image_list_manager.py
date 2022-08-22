@@ -95,12 +95,15 @@ class ImageListManager:
         """
         if file_path == "":
             file_path = self.__filePath
+        if not os.path.exists(file_path):
+            return False
         lines = []
         for classify in self.__dataList.keys():
             for path in self.__dataList[classify]:
                 lines.append("{}\t{}\n".format(path, classify))
         with open(file_path, "w", encoding=encoding) as f:
             f.writelines(lines)
+        return True
 
     def realPath(self, image_path: str):
         """
