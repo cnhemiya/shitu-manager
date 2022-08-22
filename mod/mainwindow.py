@@ -57,9 +57,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__setToolButton(self.ui.appMenuBtn, "应用菜单",
                              "./resource/app_menu.png", TOOL_BTN_ICON_SIZE)
 
-        self.__setToolButton(self.ui.saveImageListBtn, "保存图片列表",
+        self.__setToolButton(self.ui.saveImageListBtn, "保存图像库",
                              "./resource/save_image_list.png", TOOL_BTN_ICON_SIZE)
-        self.ui.saveImageListBtn.clicked.connect(self.saveImageList)
+        self.ui.saveImageListBtn.clicked.connect(self.saveImageLibrary)
 
         self.__setToolButton(self.ui.addClassifyBtn, "添加分类",
                              "./resource/add_classify.png", TOOL_BTN_ICON_SIZE)
@@ -93,8 +93,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def __initAppMenu(self):
         """初始化应用菜单"""
         mod.utils.setMenu(self.__appMenu, "新建图像库", self.newImageLibrary)
-        mod.utils.setMenu(self.__appMenu, "打开图片列表", self.openImageList)
-        mod.utils.setMenu(self.__appMenu, "保存图片列表", self.saveImageList)
+        mod.utils.setMenu(self.__appMenu, "打开图像库", self.openImageLibrary)
+        mod.utils.setMenu(self.__appMenu, "保存图像库", self.saveImageLibrary)
         self.__appMenu.addSeparator()
         mod.utils.setMenu(self.__appMenu, "新建索引库", self.newIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
@@ -113,13 +113,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def newImageLibrary(self):
         """新建图像库"""
-        dlg = QtWidgets.QFileDialog(self)
-        dlg.setWindowTitle("新建图像库")
-        dlg.setOption(QtWidgets.QFileDialog.ShowDirsOnly, True)
-        dlg.setFileMode(QtWidgets.QFileDialog.Directory)
-        dlg.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
-        if dlg.exec_() == QtWidgets.QDialog.Accepted:
-            dir_path = dlg.selectedFiles()[0]
+        dir_path = self.__openDirDialog("新建图像库")
+        if dir_path != None:
             if not mod.utils.isEmptyDir(dir_path):
                 QtWidgets.QMessageBox.warning(self, "警告", "该目录不为空，请选择空目录")
                 return
@@ -128,16 +123,31 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
             self.__imageListMgr.readFile(os.path.join(dir_path, "image_list.txt"))
 
-    def openImageList(self):
-        """打开图像列表"""
-        image_list_file = QtWidgets.QFileDialog.getOpenFileName(filter="txt 文件(*.txt);;所有文件(*.*)")[0]
-        if os.path.exists(image_list_file):
-            self.__imageListMgr.readFile(image_list_file)
-            self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
-            self.__setStatusBar(image_list_file)
+    def __openDirDialog(self, title: str):
+        """打开目录对话框"""
+        dlg = QtWidgets.QFileDialog(self)
+        dlg.setWindowTitle(title)
+        dlg.setOption(QtWidgets.QFileDialog.ShowDirsOnly, True)
+        dlg.setFileMode(QtWidgets.QFileDialog.Directory)
+        dlg.setAcceptMode(QtWidgets.QFileDialog.AcceptOpen)
+        if dlg.exec_() == QtWidgets.QDialog.Accepted:
+            dir_path = dlg.selectedFiles()[0]
+            return dir_path
+        return None
 
-    def saveImageList(self):
-        """保存图片列表"""
+    def openImageLibrary(self):
+        """打开图像库"""
+        dir_path = self.__openDirDialog("打开图像库")
+        image_list_file = os.path.join(dir_path, "image_list.txt")
+        if dir_path != None:
+            if os.path.exists(image_list_file) \
+                and os.path.exists(os.path.join(dir_path, "images")):
+                self.__imageListMgr.readFile(image_list_file)
+                self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
+                self.__setStatusBar(image_list_file)
+
+    def saveImageLibrary(self):
+        """保存图像库"""
         self.__imageListMgr.writeFile()
 
     def newIndexLibrary(self):

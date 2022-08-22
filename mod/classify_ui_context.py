@@ -94,6 +94,7 @@ class ClassifyUiContext(QtCore.QObject):
                 QtWidgets.QMessageBox.warning(self.parent, "重命名分类", "重命名分类错误")
             else:
                 self.setClassifyList(self.__imageListMgr.classifyList)
+                self.__imageListMgr.writeFile()
 
     def addClassify(self):
         """添加分类"""

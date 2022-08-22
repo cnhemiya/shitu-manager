@@ -163,6 +163,7 @@ class ImageListUiContext(QtCore.QObject):
                 and new_classify != old_classify \
                 and new_classify != "":
             self.__moveImage(old_classify, new_classify)
+            self.__imageListMgr.writeFile()
 
     def __moveImage(self, old_classify, new_classify):
         """移动图片"""
