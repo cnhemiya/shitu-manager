@@ -41,3 +41,13 @@ def newFile(file_path: str):
         with open(file_path, 'w') as f:
             pass
         return True 
+
+def initLibrary(dir_path: str):
+    """初始化库"""
+    images_dir = os.path.join(dir_path, "images")
+    if not os.path.exists(images_dir):
+        os.makedirs(images_dir)
+    image_list_path = os.path.join(dir_path, "image_list.txt")
+    newFile(image_list_path)
+    return os.path.exists(dir_path)
+    
