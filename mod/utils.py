@@ -49,7 +49,7 @@ def copyImageToDir(self, from_image_path: str, to_dir_path: str):
 
 def oneKeyImport(from_path: str, to_path: str):
     """从其它图像库 from_path {image_list.txt} 导入到图像库 to_path {image_list.txt}"""
-    if not os.path.exists(from_path) and not os.path.exists(to_path):
+    if not os.path.exists(from_path) or not os.path.exists(to_path):
         return None
     if from_path == to_path:
         return None
