@@ -91,6 +91,10 @@ class ImageListUiContext(QtCore.QObject):
             item.setSizeHint(size)
             self.__ui.addItem(item)
 
+    def clear(self):
+        """清除图片列表"""
+        self.__ui.clear()
+
     def addImage(self):
         """添加图片"""
         filter = "图片 (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG);;所有文件(*.*)"

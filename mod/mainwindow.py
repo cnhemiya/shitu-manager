@@ -123,7 +123,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if not mod.utils.initLibrary(dir_path):
                 QtWidgets.QMessageBox.warning(self, "错误", "新建图像库失败")
                 return
-            self.__imageListMgr.readFile(os.path.join(dir_path, "image_list.txt"))
+            self.__reload(os.path.join(dir_path, "image_list.txt"), dir_path)
 
     def __openDirDialog(self, title: str):
         """打开目录对话框"""
@@ -141,18 +141,24 @@ class MainWindow(QtWidgets.QMainWindow):
         """打开图像库"""
         dir_path = self.__openDirDialog("打开图像库")
         if dir_path != None:
-            image_list_file = os.path.join(dir_path, "image_list.txt")
-            if os.path.exists(image_list_file) \
+            image_list_path = os.path.join(dir_path, "image_list.txt")
+            if os.path.exists(image_list_path) \
                 and os.path.exists(os.path.join(dir_path, "images")):
-                self.__imageListMgr.readFile(image_list_file)
-                self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
-                self.__setStatusBar(image_list_file)
+                self.__reload(image_list_path, dir_path)
+
+    def __reload(self, image_list_path: str, msg: str):
+        """重新加载图像库"""
+        self.__imageListMgr.readFile(image_list_path)
+        self.__imageListUiContext.clear()
+        self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
+        self.__setStatusBar(msg)
+
 
     def saveImageLibrary(self):
         """保存图像库"""
         if os.path.exists(self.__imageListMgr.filePath):
             self.__imageListMgr.writeFile()
-            self.__setStatusBar(self.__imageListMgr.filePath)
+            self.__setStatusBar(self.__imageListMgr.dirName)
 
     def newIndexLibrary(self):
         """新建重建索引库"""
@@ -239,4 +245,4 @@ class MainWindow(QtWidgets.QMainWindow):
         
     def __setStatusBar(self, msg: str):
         """设置状态栏信息"""
-        self.ui.statusbar.showMessage("文件路径：{}".format(msg))
+        self.ui.statusbar.showMessage("图像库路径：{}".format(msg))

@@ -11,7 +11,7 @@ import mod.index_http_client
 
 
 def main():
-    client = mod.index_http_client.IndexHttpClient("127.0.0.1", 8000)
+    client = mod.index_http_client.IndexHttpClient("localhost", 8000)
     # print(client.url())
     # client.update_images("image_list.txt", "/home/user_home/test_lib")
     # client.open_index("/home/user_home/test_lib")

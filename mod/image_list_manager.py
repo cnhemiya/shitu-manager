@@ -68,6 +68,7 @@ class ImageListManager:
             file_path (str): 文件路径
             encoding (str, optional): 文件编码. 默认 "utf-8".
         """
+        self.__dataList.clear()
         with open(file_path, "r", encoding=encoding) as f:
             for line in f:
                 line = line.rstrip("\n")
