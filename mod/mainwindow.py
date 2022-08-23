@@ -140,8 +140,8 @@ class MainWindow(QtWidgets.QMainWindow):
     def openImageLibrary(self):
         """打开图像库"""
         dir_path = self.__openDirDialog("打开图像库")
-        image_list_file = os.path.join(dir_path, "image_list.txt")
         if dir_path != None:
+            image_list_file = os.path.join(dir_path, "image_list.txt")
             if os.path.exists(image_list_file) \
                 and os.path.exists(os.path.join(dir_path, "images")):
                 self.__imageListMgr.readFile(image_list_file)
