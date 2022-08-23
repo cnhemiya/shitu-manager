@@ -17,6 +17,8 @@ BASE_IMAGE_SIZE = 64
 
 class ImageListUiContext(QtCore.QObject):
     # 图片列表界面相关业务，style sheet 在 MainWindow.ui 相应的 ImageListWidget 中设置
+    listCount = QtCore.pyqtSignal(int) # 图像列表图像的数量
+
     def __init__(self, ui:QtWidgets.QListWidget, parent:QtWidgets.QMainWindow, 
                 image_list_mgr:imglistmgr.ImageListManager):
         super(ImageListUiContext, self).__init__()
@@ -84,12 +86,15 @@ class ImageListUiContext(QtCore.QObject):
         self.__selectedClassify = classify
         image_list = self.__imageListMgr.imageList(classify)
         self.__ui.clear()
+        count = 0
         for i in image_list:
             item = QtWidgets.QListWidgetItem(self.__ui)
             item.setIcon(QtGui.QIcon(self.__imageListMgr.realPath(i)))
             item.setData(QtCore.Qt.UserRole, i)
             item.setSizeHint(size)
             self.__ui.addItem(item)
+            count += 1
+        self.listCount.emit(count)
 
     def clear(self):
         """清除图片列表"""

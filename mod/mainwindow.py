@@ -32,6 +32,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__appMenu = QtWidgets.QMenu()
         self.__initAppMenu()  # 初始化应用菜单
 
+        self.__pathBar = QtWidgets.QLabel(self) # 路径
+        self.__imageCountBar = QtWidgets.QLabel(self) # 图像列表数量
+        self.__spaceBar = QtWidgets.QLabel(self) # 空格间隔栏
+
         # 分类界面相关业务
         self.__classifyUiContext = mod.classify_ui_context.ClassifyUiContext(
                 ui=self.ui.classifyListView, parent=self, image_list_mgr=self.__imageListMgr)
@@ -52,6 +56,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # 初始化图像缩放
         self.ui.imageScaleSlider.setValue(4)
+
+        # 状态栏界面设置
+        self.__spaceBar.setText("                ") # 间隔16空格
+        self.ui.statusbar.addWidget(self.__pathBar)
+        self.ui.statusbar.addWidget(self.__spaceBar)
+        self.ui.statusbar.addWidget(self.__imageCountBar)
 
 
     def __initToolBtn(self):
@@ -112,6 +122,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__classifyUiContext.selected.connect(self.__imageListUiContext.setImageList)
         self.ui.searchClassifyBtn.clicked.connect(self.searchClassify)
         self.ui.imageScaleSlider.valueChanged.connect(self.__imageListUiContext.setImageScale)
+        self.__imageListUiContext.listCount.connect(self.__setImageCountBar)
 
     def newImageLibrary(self):
         """新建图像库"""
@@ -151,14 +162,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__imageListMgr.readFile(image_list_path)
         self.__imageListUiContext.clear()
         self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
-        self.__setStatusBar(msg)
+        self.__setPathBar(msg)
+        self.__setImageCountBar(0)
 
 
     def saveImageLibrary(self):
         """保存图像库"""
         if os.path.exists(self.__imageListMgr.filePath):
             self.__imageListMgr.writeFile()
-            self.__setStatusBar(self.__imageListMgr.dirName)
+            self.__setPathBar(self.__imageListMgr.dirName)
 
     def newIndexLibrary(self):
         """新建重建索引库"""
@@ -243,6 +255,10 @@ class MainWindow(QtWidgets.QMainWindow):
         """退出应用"""
         os._exit(0)
         
-    def __setStatusBar(self, msg: str):
-        """设置状态栏信息"""
-        self.ui.statusbar.showMessage("图像库路径：{}".format(msg))
+    def __setPathBar(self, msg: str):
+        """设置路径状态栏信息"""
+        self.__pathBar.setText("图像库路径：{}".format(msg))
+
+    def __setImageCountBar(self, count: int):
+        """设置图像数量状态栏信息"""
+        self.__imageCountBar.setText("当前图像数量：{}".format(count))
