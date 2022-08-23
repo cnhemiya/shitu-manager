@@ -1,16 +1,21 @@
+import json
 import os
 import sys
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
-import requests
+import urllib3
+import urllib.parse
 
 
 class IndexHttpClient():
+    """索引库客户端，使用 urllib3 连接，使用 urllib.parse 进行 url 编码"""
     def __init__(self, host: str, port: int):
         self.__host = host
         self.__port = port
+        self.__http = urllib3.PoolManager()
+        self.__headers = {"Content-type": "application/json"}
 
     def url(self):
         return "http://{}:{}".format(self.__host, self.__port)
@@ -23,24 +28,25 @@ class IndexHttpClient():
             "index_root_path":index_root_path, \
             "index_method":index_method, \
             "force":force}
-        req = requests.get(self.url() + "/new_index", params=params)
-        result = req.json()
-        msg = result["error_message"]
-        return msg
+        return self.__post(self.url() + "/new_index?", params)
 
     def open_index(self, index_root_path: str):
         """打开库"""
         params = {"index_root_path":index_root_path}
-        req = requests.get(self.url() + "/open_index", params=params)
-        result = req.json()
-        msg = result["error_message"]
-        return msg
+        return self.__post(self.url() + "/open_index?", params)
 
     def update_images(self, image_list_path: str, index_root_path: str):
         """更新库图片"""
         params = {"image_list_path":image_list_path, \
             "index_root_path":index_root_path}
-        req = requests.get(self.url() + "/update_images", params=params)
-        result = req.json()
+        return self.__post(self.url() + "/update_images?", params)
+
+    def __post(self, url: str, params: dict):
+        """发送 url 并接收数据"""
+        http = self.__http
+        encode_params = urllib.parse.urlencode(params)
+        get_url = url + encode_params
+        req = http.request("GET", get_url, headers=self.__headers)
+        result = json.loads(req.data)
         msg = result["error_message"]
         return msg
