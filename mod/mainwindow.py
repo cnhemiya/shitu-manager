@@ -171,7 +171,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
         self.__setPathBar(msg)
         self.__setImageCountBar(0)
-
+        self.__setImageSelectedCountBar(0)
 
     def saveImageLibrary(self):
         """保存图像库"""
