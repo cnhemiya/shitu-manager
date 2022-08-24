@@ -18,6 +18,7 @@ BASE_IMAGE_SIZE = 64
 class ImageListUiContext(QtCore.QObject):
     # 图片列表界面相关业务，style sheet 在 MainWindow.ui 相应的 ImageListWidget 中设置
     listCount = QtCore.pyqtSignal(int) # 图像列表图像的数量
+    selectedCount = QtCore.pyqtSignal(int) # 图像列表选择图像的数量
 
     def __init__(self, ui:QtWidgets.QListWidget, parent:QtWidgets.QMainWindow, 
                 image_list_mgr:imglistmgr.ImageListManager):
@@ -28,6 +29,7 @@ class ImageListUiContext(QtCore.QObject):
         self.__initUi()
         self.__menu = QtWidgets.QMenu()
         self.__initMenu()
+        self.__connectSignal()
         self.__selectedClassify = ""
         self.__imageScale = 1
 
@@ -52,7 +54,7 @@ class ImageListUiContext(QtCore.QObject):
         self.__ui.setViewMode(QtWidgets.QListView.IconMode)
         self.__ui.setSpacing(15)
         self.__ui.setMovement(QtWidgets.QListView.Static)
-        self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
+        self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
     def __initMenu(self):
         """初始化图片列表界面菜单"""
@@ -61,6 +63,7 @@ class ImageListUiContext(QtCore.QObject):
         mod.utils.setMenu(self.__menu, "编辑图片分类", self.editImageClassify)
         self.__menu.addSeparator()
         mod.utils.setMenu(self.__menu, "选择全部图片", self.selectAllImage)
+        mod.utils.setMenu(self.__menu, "反向选择图片", self.reverseSelectImage)
         mod.utils.setMenu(self.__menu, "取消选择图片", self.cancelSelectImage)
 
         self.__ui.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -70,6 +73,10 @@ class ImageListUiContext(QtCore.QObject):
         """显示图片列表界面菜单"""
         if len(self.__imageListMgr.filePath) > 0:
             self.__menu.exec_(self.__ui.mapToGlobal(pos))
+
+    def __connectSignal(self):
+        """连接信号与槽"""
+        self.__ui.itemSelectionChanged.connect(self.onSelectionChanged)
 
     def setImageScale(self, scale:int):
         """设置图片大小"""
@@ -196,6 +203,17 @@ class ImageListUiContext(QtCore.QObject):
         """选择所有图片"""
         self.__ui.selectAll()
 
+    def reverseSelectImage(self):
+        """反向选择图片"""
+        for i in range(self.__ui.count()):
+            item = self.__ui.item(i)
+            item.setSelected(not item.isSelected())
+
     def cancelSelectImage(self):
         """取消选择图片"""
         self.__ui.clearSelection()
+
+    def onSelectionChanged(self):
+        """选择图像该变，发送选择的数量信号"""
+        count = len(self.__ui.selectedItems())
+        self.selectedCount.emit(count)

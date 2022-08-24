@@ -36,7 +36,7 @@ class IndexHttpClient():
         return self.__post(self.url() + "/open_index?", params)
 
     def update_index(self, image_list_path: str, index_root_path: str):
-        """更新库图片"""
+        """更新索引库"""
         params = {"image_list_path":image_list_path, \
             "index_root_path":index_root_path}
         return self.__post(self.url() + "/update_index?", params)
