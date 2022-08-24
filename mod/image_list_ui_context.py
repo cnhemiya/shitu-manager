@@ -63,6 +63,7 @@ class ImageListUiContext(QtCore.QObject):
         mod.utils.setMenu(self.__menu, "编辑图片分类", self.editImageClassify)
         self.__menu.addSeparator()
         mod.utils.setMenu(self.__menu, "选择全部图片", self.selectAllImage)
+        mod.utils.setMenu(self.__menu, "反向选择图片", self.reverseSelectImage)
         mod.utils.setMenu(self.__menu, "取消选择图片", self.cancelSelectImage)
 
         self.__ui.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -202,10 +203,17 @@ class ImageListUiContext(QtCore.QObject):
         """选择所有图片"""
         self.__ui.selectAll()
 
+    def reverseSelectImage(self):
+        """反向选择图片"""
+        for i in range(self.__ui.count()):
+            item = self.__ui.item(i)
+            item.setSelected(not item.isSelected())
+
     def cancelSelectImage(self):
         """取消选择图片"""
         self.__ui.clearSelection()
 
     def onSelectionChanged(self):
+        """选择图像该变，发送选择的数量信号"""
         count = len(self.__ui.selectedItems())
         self.selectedCount.emit(count)
