@@ -1,5 +1,6 @@
 import os
 import sys
+import socket
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
@@ -15,7 +16,10 @@ import mod.utils
 
 
 TOOL_BTN_ICON_SIZE = 64
-DEFAULT_HOST = "localhost"
+try:
+    DEFAULT_HOST = socket.gethostbyname(socket.gethostname())
+except:
+    DEFAULT_HOST = '127.0.0.1'
 DEFAULT_PORT = 8000
 
 
@@ -237,7 +241,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         try:
             client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
-            err_msg = client.update_images(image_list_path="image_list.txt", 
+            err_msg = client.update_index(image_list_path="image_list.txt",
                         index_root_path=self.__imageListMgr.dirName)
             if err_msg == None:
                 QtWidgets.QMessageBox.information(self, "提示", "更新索引库成功")

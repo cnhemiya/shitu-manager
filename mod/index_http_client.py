@@ -35,11 +35,11 @@ class IndexHttpClient():
         params = {"index_root_path":index_root_path}
         return self.__post(self.url() + "/open_index?", params)
 
-    def update_images(self, image_list_path: str, index_root_path: str):
+    def update_index(self, image_list_path: str, index_root_path: str):
         """更新库图片"""
         params = {"image_list_path":image_list_path, \
             "index_root_path":index_root_path}
-        return self.__post(self.url() + "/update_images?", params)
+        return self.__post(self.url() + "/update_index?", params)
 
     def __post(self, url: str, params: dict):
         """发送 url 并接收数据"""
@@ -48,5 +48,9 @@ class IndexHttpClient():
         get_url = url + encode_params
         req = http.request("GET", get_url, headers=self.__headers)
         result = json.loads(req.data)
+        if isinstance(result, str):
+            result = eval(result)
         msg = result["error_message"]
+        if len(msg) == 0:
+            msg = None
         return msg
