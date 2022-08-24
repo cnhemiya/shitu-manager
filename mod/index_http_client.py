@@ -48,5 +48,9 @@ class IndexHttpClient():
         get_url = url + encode_params
         req = http.request("GET", get_url, headers=self.__headers)
         result = json.loads(req.data)
+        if isinstance(result, str):
+            result = eval(result)
         msg = result["error_message"]
+        if len(msg) == 0:
+            msg = None
         return msg
