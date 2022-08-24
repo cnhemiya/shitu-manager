@@ -34,7 +34,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.__pathBar = QtWidgets.QLabel(self) # 路径
         self.__imageCountBar = QtWidgets.QLabel(self) # 图像列表数量
-        self.__spaceBar = QtWidgets.QLabel(self) # 空格间隔栏
+        self.__imageSelectedBar = QtWidgets.QLabel(self) # 图像列表选择数量
+        self.__spaceBar1 = QtWidgets.QLabel(self) # 空格间隔栏
+        self.__spaceBar2 = QtWidgets.QLabel(self) # 空格间隔栏
 
         # 分类界面相关业务
         self.__classifyUiContext = mod.classify_ui_context.ClassifyUiContext(
@@ -58,10 +60,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.imageScaleSlider.setValue(4)
 
         # 状态栏界面设置
-        self.__spaceBar.setText("                ") # 间隔16空格
+        self.__spaceBar1.setText("                ") # 间隔16空格
+        self.__spaceBar2.setText("                ") # 间隔16空格
         self.ui.statusbar.addWidget(self.__pathBar)
-        self.ui.statusbar.addWidget(self.__spaceBar)
+        self.ui.statusbar.addWidget(self.__spaceBar1)
         self.ui.statusbar.addWidget(self.__imageCountBar)
+        self.ui.statusbar.addWidget(self.__spaceBar2)
+        self.ui.statusbar.addWidget(self.__imageSelectedBar)
 
 
     def __initToolBtn(self):
@@ -124,6 +129,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.searchClassifyBtn.clicked.connect(self.searchClassify)
         self.ui.imageScaleSlider.valueChanged.connect(self.__imageListUiContext.setImageScale)
         self.__imageListUiContext.listCount.connect(self.__setImageCountBar)
+        self.__imageListUiContext.selectedCount.connect(self.__setImageSelectedCountBar)
 
     def newImageLibrary(self):
         """新建图像库"""
@@ -274,3 +280,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __setImageCountBar(self, count: int):
         """设置图像数量状态栏信息"""
         self.__imageCountBar.setText("当前图像数量：{}".format(count))
+
+    def __setImageSelectedCountBar(self, count: int):
+        """设置选择图像数量状态栏信息"""
+        self.__imageSelectedBar.setText("选择图像数量：{}".format(count))
