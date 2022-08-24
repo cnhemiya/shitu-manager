@@ -118,6 +118,7 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "更新索引库", self.updateIndexLibrary)
         self.__appMenu.addSeparator()
+        mod.utils.setMenu(self.__appMenu, "关于", self.showAbout)
         mod.utils.setMenu(self.__appMenu, "退出", self.exitApp)
 
         self.ui.appMenuBtn.setMenu(self.__appMenu)
@@ -268,6 +269,10 @@ class MainWindow(QtWidgets.QMainWindow):
             if not is_has:
                 cmb.addItem(txt)
         self.__classifyUiContext.searchClassify(txt)
+
+    def showAbout(self):
+        """显示关于对话框"""
+        QtWidgets.QMessageBox.information(self, "关于", "识图图像库管理 V1.0.0")
 
     def exitApp(self):
         """退出应用"""
