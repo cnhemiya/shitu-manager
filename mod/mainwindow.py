@@ -237,7 +237,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         try:
             client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
-            err_msg = client.update_images(image_list_path="image_list.txt", 
+            err_msg = client.update_index(image_list_path="image_list.txt", 
                         index_root_path=self.__imageListMgr.dirName)
             if err_msg == None:
                 QtWidgets.QMessageBox.information(self, "提示", "更新索引库成功")
