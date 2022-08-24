@@ -52,7 +52,7 @@ class ImageListUiContext(QtCore.QObject):
         self.__ui.setViewMode(QtWidgets.QListView.IconMode)
         self.__ui.setSpacing(15)
         self.__ui.setMovement(QtWidgets.QListView.Static)
-        self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ContiguousSelection)
+        self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
 
     def __initMenu(self):
         """初始化图片列表界面菜单"""
