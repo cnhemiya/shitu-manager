@@ -30,9 +30,10 @@ class IndexHttpClient():
             "force":force}
         return self.__post(self.url() + "/new_index?", params)
 
-    def open_index(self, index_root_path: str):
+    def open_index(self, index_root_path: str, image_list_path: str):
         """打开库"""
-        params = {"index_root_path":index_root_path}
+        params = {"index_root_path":index_root_path,
+                "image_list_path":image_list_path}
         return self.__post(self.url() + "/open_index?", params)
 
     def update_index(self, image_list_path: str, index_root_path: str):
