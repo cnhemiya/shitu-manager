@@ -52,6 +52,6 @@ class IndexHttpClient():
         if isinstance(result, str):
             result = eval(result)
         msg = result["error_message"]
-        if len(msg) == 0:
+        if msg != None and len(msg) == 0:
             msg = None
         return msg
