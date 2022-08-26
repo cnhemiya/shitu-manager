@@ -16,10 +16,13 @@ import mod.utils
 
 
 TOOL_BTN_ICON_SIZE = 64
-try:
-    DEFAULT_HOST = socket.gethostbyname(socket.gethostname())
-except:
-    DEFAULT_HOST = '127.0.0.1'
+
+# try:
+#     DEFAULT_HOST = socket.gethostbyname(socket.gethostname())
+# except:
+#     DEFAULT_HOST = '127.0.0.1'
+
+DEFAULT_HOST = "localhost" 
 DEFAULT_PORT = 8000
 
 
