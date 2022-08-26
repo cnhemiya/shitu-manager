@@ -230,7 +230,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         try:
             client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
-            err_msg = client.open_index(index_root_path=self.__imageListMgr.dirName)
+            err_msg = client.open_index(index_root_path=self.__imageListMgr.dirName,
+                    image_list_path="image_list.txt")
             if err_msg == None:
                 QtWidgets.QMessageBox.information(self, "提示", "打开索引库成功")
                 return
