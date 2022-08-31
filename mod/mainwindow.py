@@ -197,9 +197,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def saveImageLibrary(self):
         """保存图像库"""
-        if os.path.exists(self.__imageListMgr.filePath):
-            self.__imageListMgr.writeFile()
-            self.__setPathBar(self.__imageListMgr.dirName)
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.warning(self, "错误", "请先打开正确的图像库")
+            return
+        self.__imageListMgr.writeFile()
+        self.__reload(self.__imageListMgr.filePath, self.__imageListMgr.dirName)
+        hint_str = "为保证图片准确识别，请在修改图片库后更新索引。\n\
+如果是新建图像库或者没有索引库，请新建索引。"
+        QtWidgets.QMessageBox.information(self, "提示", hint_str)
 
     def importImageLibrary(self):
         """从其它图像库导入到当前图像库，建议当前库是新建的空库"""
