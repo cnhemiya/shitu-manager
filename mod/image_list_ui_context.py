@@ -109,6 +109,9 @@ class ImageListUiContext(QtCore.QObject):
 
     def addImage(self):
         """添加图片"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            return
         filter = "图片 (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG);;所有文件(*.*)"
         dlg = QtWidgets.QFileDialog(self.__parent)
         dlg.setFileMode(QtWidgets.QFileDialog.ExistingFiles) # 多选文件
@@ -148,6 +151,9 @@ class ImageListUiContext(QtCore.QObject):
 
     def removeImage(self):
         """移除图片"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            return
         path_list = []
         image_list = self.__ui.selectedItems()
         if len(image_list) == 0:

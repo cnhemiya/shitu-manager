@@ -98,6 +98,9 @@ class ClassifyUiContext(QtCore.QObject):
 
     def addClassify(self):
         """添加分类"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            return
         dlg = QtWidgets.QDialog(parent=self.parent)
         ui = mod.ui_addclassifydialog.Ui_AddClassifyDialog()
         ui.setupUi(dlg)
@@ -112,6 +115,9 @@ class ClassifyUiContext(QtCore.QObject):
 
     def removeClassify(self):
         """移除分类"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            return
         if not self.__ui.currentIndex().isValid():
             return
         classify = self.__ui.currentIndex().data()

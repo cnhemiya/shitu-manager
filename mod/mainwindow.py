@@ -288,6 +288,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def searchClassify(self):
         """查找分类"""
+        if len(self.__imageListMgr.classifyList) == 0:
+            return
         cmb = self.ui.searchClassifyHistoryCmb
         txt = cmb.currentText()
         is_has = False
