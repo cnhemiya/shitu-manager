@@ -38,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__imageListMgr = mod.image_list_manager.ImageListManager()
 
         self.__appMenu = QtWidgets.QMenu() # 应用菜单
-        self.__moreLibraryMenu = QtWidgets.QMenu() # 图像库附加功能菜单
+        self.__libraryAppendMenu = QtWidgets.QMenu() # 图像库附加功能菜单
         self.__initAppMenu()  # 初始化应用菜单
 
         self.__pathBar = QtWidgets.QLabel(self) # 路径
@@ -128,9 +128,9 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "打开图像库", self.openImageLibrary)
         mod.utils.setMenu(self.__appMenu, "保存图像库", self.saveImageLibrary)
         
-        self.__moreLibraryMenu.setTitle("图像库附加功能")
-        mod.utils.setMenu(self.__moreLibraryMenu, "导入到当前图像库", self.importImageLibrary)
-        self.__appMenu.addMenu(self.__moreLibraryMenu)
+        self.__libraryAppendMenu.setTitle("图像库附加功能")
+        mod.utils.setMenu(self.__libraryAppendMenu, "导入到当前图像库", self.importImageLibrary)
+        self.__appMenu.addMenu(self.__libraryAppendMenu)
 
         self.__appMenu.addSeparator()
         mod.utils.setMenu(self.__appMenu, "新建/重建 索引库", self.newIndexLibrary)
