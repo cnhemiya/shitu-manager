@@ -284,7 +284,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def exitApp(self):
         """退出应用"""
-        os._exit(0)
+        sys.exit(0)
         
     def __setPathBar(self, msg: str):
         """设置路径状态栏信息"""
