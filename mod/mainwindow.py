@@ -1,3 +1,4 @@
+from multiprocessing.dummy import active_children
 import os
 import sys
 import socket
@@ -13,6 +14,7 @@ import mod.image_list_ui_context
 import mod.ui_newlibrarydialog
 import mod.index_http_client
 import mod.utils
+import mod.ui_waitdialog
 
 
 TOOL_BTN_ICON_SIZE = 64
@@ -57,9 +59,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__imageListUiContext = mod.image_list_ui_context.ImageListUiContext(
                 ui=self.ui.imageListWidget, parent=self, image_list_mgr=self.__imageListMgr)
 
+        # 搜索的历史记录回车快捷键
+        self.__historyCmbShortcut = QtWidgets.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Return), 
+                self.ui.searchClassifyHistoryCmb)
+
+        self.__waitDialog = QtWidgets.QDialog()
+        self.__waitDialogUi = mod.ui_waitdialog.Ui_WaitDialog()
         self.__initToolBtn()
         self.__connectSignal()
         self.__initUI()
+        self.__initWaitDialog()
 
     def __initUI(self):
         """初始化界面"""
@@ -144,6 +153,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.appMenuBtn.setMenu(self.__appMenu)
         self.ui.appMenuBtn.setPopupMode(QtWidgets.QToolButton.InstantPopup)
 
+    def __initWaitDialog(self):
+        """初始化等待对话框"""
+        self.__waitDialogUi.setupUi(self.__waitDialog)
+        self.__waitDialog.setWindowFlags(QtCore.Qt.Dialog|QtCore.Qt.FramelessWindowHint)
+
+    def __startWait(self):
+        """开始显示等待对话框"""
+        self.setEnabled(False)
+        self.__waitDialog.show()
+
+    def __stopWait(self):
+        """停止显示等待对话框"""
+        self.setEnabled(True)
+        self.__waitDialog.close()
+
     def __connectSignal(self):
         """连接信号与槽"""
         self.__classifyUiContext.selected.connect(self.__imageListUiContext.setImageList)
@@ -151,6 +175,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.imageScaleSlider.valueChanged.connect(self.__imageListUiContext.setImageScale)
         self.__imageListUiContext.listCount.connect(self.__setImageCountBar)
         self.__imageListUiContext.selectedCount.connect(self.__setImageSelectedCountBar)
+        self.__historyCmbShortcut.activated.connect(self.searchClassify)
 
     def newImageLibrary(self):
         """新建图像库"""
@@ -233,11 +258,13 @@ class MainWindow(QtWidgets.QMainWindow):
         force = ui.resetCheckBox.isChecked()
         if result == QtWidgets.QDialog.Accepted:
             try:
+                self.__startWait()
                 client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
                 err_msg = client.new_index(image_list_path="image_list.txt", 
                         index_root_path=self.__imageListMgr.dirName, 
                         index_method=index_method, 
                         force=force)
+                self.__stopWait()
                 if err_msg == None:
                     QtWidgets.QMessageBox.information(self, "提示", "新建/重建 索引库成功")
                     return
@@ -245,6 +272,7 @@ class MainWindow(QtWidgets.QMainWindow):
                     QtWidgets.QMessageBox.warning(self, "错误", err_msg)
                     return
             except Exception as e:
+                self.__stopWait()
                 QtWidgets.QMessageBox.warning(self, "错误", str(e))
                 return
 
@@ -273,9 +301,11 @@ class MainWindow(QtWidgets.QMainWindow):
             QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
             return
         try:
+            self.__startWait()
             client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
             err_msg = client.update_index(image_list_path="image_list.txt",
                         index_root_path=self.__imageListMgr.dirName)
+            self.__stopWait()
             if err_msg == None:
                 QtWidgets.QMessageBox.information(self, "提示", "更新索引库成功")
                 return
@@ -283,6 +313,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 QtWidgets.QMessageBox.warning(self, "错误", err_msg)
                 return
         except Exception as e:
+            self.__stopWait()
             QtWidgets.QMessageBox.warning(self, "错误", str(e))
             return   
 
