@@ -37,8 +37,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.__imageListMgr = mod.image_list_manager.ImageListManager()
 
-        self.__appMenu = QtWidgets.QMenu()
-        self.__moreLibraryMenu = QtWidgets.QMenu()
+        self.__appMenu = QtWidgets.QMenu() # 应用菜单
+        self.__moreLibraryMenu = QtWidgets.QMenu() # 图像库附加功能菜单
         self.__initAppMenu()  # 初始化应用菜单
 
         self.__pathBar = QtWidgets.QLabel(self) # 路径
@@ -218,7 +218,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def newIndexLibrary(self):
         """新建重建索引库"""
         if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+            QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
             return
         dlg = QtWidgets.QDialog(self)
         ui = mod.ui_newlibrarydialog.Ui_NewlibraryDialog()
@@ -246,7 +246,7 @@ class MainWindow(QtWidgets.QMainWindow):
     # def openIndexLibrary(self):
     #     """打开索引库"""
     #     if not os.path.exists(self.__imageListMgr.filePath):
-    #         QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+    #         QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
     #         return
     #     try:
     #         client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
@@ -265,7 +265,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def updateIndexLibrary(self):
         """更新索引库"""
         if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+            QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
             return
         try:
             client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
