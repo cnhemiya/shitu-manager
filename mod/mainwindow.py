@@ -304,7 +304,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__pathBar.setText("图像库路径：{}".format(msg))
 
     def __setClassifyCountBar(self, msg: str):
-        self.__classifyCountBar.setText("分类数量：{}".format(msg))
+        self.__classifyCountBar.setText("分类总数量：{}".format(msg))
 
     def __setImageCountBar(self, count: int):
         """设置图像数量状态栏信息"""
