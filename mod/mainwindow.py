@@ -24,6 +24,7 @@ TOOL_BTN_ICON_SIZE = 64
 
 DEFAULT_HOST = "localhost" 
 DEFAULT_PORT = 8000
+PADDLECLAS_DOC_URL = "https://gitee.com/paddlepaddle/PaddleClas"
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -128,9 +129,10 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "导入图像库", self.importImageLibrary)
         self.__appMenu.addSeparator()
         mod.utils.setMenu(self.__appMenu, "新建/重建 索引库", self.newIndexLibrary)
-        mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
+        # mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
         mod.utils.setMenu(self.__appMenu, "更新索引库", self.updateIndexLibrary)
         self.__appMenu.addSeparator()
+        mod.utils.setMenu(self.__appMenu, "帮助", self.showHelp)
         mod.utils.setMenu(self.__appMenu, "关于", self.showAbout)
         mod.utils.setMenu(self.__appMenu, "退出", self.exitApp)
 
@@ -233,24 +235,24 @@ class MainWindow(QtWidgets.QMainWindow):
                 QtWidgets.QMessageBox.warning(self, "错误", str(e))
                 return
 
-    def openIndexLibrary(self):
-        """打开索引库"""
-        if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
-            return
-        try:
-            client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
-            err_msg = client.open_index(index_root_path=self.__imageListMgr.dirName,
-                    image_list_path="image_list.txt")
-            if err_msg == None:
-                QtWidgets.QMessageBox.information(self, "提示", "打开索引库成功")
-                return
-            else:
-                QtWidgets.QMessageBox.warning(self, "错误", err_msg)
-                return
-        except Exception as e:
-            QtWidgets.QMessageBox.warning(self, "错误", str(e))
-            return    
+    # def openIndexLibrary(self):
+    #     """打开索引库"""
+    #     if not os.path.exists(self.__imageListMgr.filePath):
+    #         QtWidgets.QMessageBox.information(self, "提示", "请打开图像库")
+    #         return
+    #     try:
+    #         client = mod.index_http_client.IndexHttpClient(DEFAULT_HOST, DEFAULT_PORT)
+    #         err_msg = client.open_index(index_root_path=self.__imageListMgr.dirName,
+    #                 image_list_path="image_list.txt")
+    #         if err_msg == None:
+    #             QtWidgets.QMessageBox.information(self, "提示", "打开索引库成功")
+    #             return
+    #         else:
+    #             QtWidgets.QMessageBox.warning(self, "错误", err_msg)
+    #             return
+    #     except Exception as e:
+    #         QtWidgets.QMessageBox.warning(self, "错误", str(e))
+    #         return    
 
     def updateIndexLibrary(self):
         """更新索引库"""
@@ -284,6 +286,10 @@ class MainWindow(QtWidgets.QMainWindow):
             if not is_has:
                 cmb.addItem(txt)
         self.__classifyUiContext.searchClassify(txt)
+
+    def showHelp(self):
+        """显示帮助"""
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl(PADDLECLAS_DOC_URL))
 
     def showAbout(self):
         """显示关于对话框"""
