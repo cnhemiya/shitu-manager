@@ -40,10 +40,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__initAppMenu()  # 初始化应用菜单
 
         self.__pathBar = QtWidgets.QLabel(self) # 路径
+        self.__classifyCountBar = QtWidgets.QLabel(self) # 分类数量
         self.__imageCountBar = QtWidgets.QLabel(self) # 图像列表数量
         self.__imageSelectedBar = QtWidgets.QLabel(self) # 图像列表选择数量
         self.__spaceBar1 = QtWidgets.QLabel(self) # 空格间隔栏
         self.__spaceBar2 = QtWidgets.QLabel(self) # 空格间隔栏
+        self.__spaceBar3 = QtWidgets.QLabel(self) # 空格间隔栏
 
         # 分类界面相关业务
         self.__classifyUiContext = mod.classify_ui_context.ClassifyUiContext(
@@ -67,12 +69,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.imageScaleSlider.setValue(4)
 
         # 状态栏界面设置
-        self.__spaceBar1.setText("                ") # 间隔16空格
-        self.__spaceBar2.setText("                ") # 间隔16空格
+        space_bar = "                " # 间隔16空格
+        self.__spaceBar1.setText(space_bar)
+        self.__spaceBar2.setText(space_bar)
+        self.__spaceBar3.setText(space_bar)
         self.ui.statusbar.addWidget(self.__pathBar)
         self.ui.statusbar.addWidget(self.__spaceBar1)
-        self.ui.statusbar.addWidget(self.__imageCountBar)
+        self.ui.statusbar.addWidget(self.__classifyCountBar)
         self.ui.statusbar.addWidget(self.__spaceBar2)
+        self.ui.statusbar.addWidget(self.__imageCountBar)
+        self.ui.statusbar.addWidget(self.__spaceBar3)
         self.ui.statusbar.addWidget(self.__imageSelectedBar)
 
 
@@ -178,6 +184,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__imageListUiContext.clear()
         self.__classifyUiContext.setClassifyList(self.__imageListMgr.classifyList)
         self.__setPathBar(msg)
+        self.__setClassifyCountBar(len(self.__imageListMgr.classifyList))
         self.__setImageCountBar(0)
         self.__setImageSelectedCountBar(0)
 
@@ -289,6 +296,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def __setPathBar(self, msg: str):
         """设置路径状态栏信息"""
         self.__pathBar.setText("图像库路径：{}".format(msg))
+
+    def __setClassifyCountBar(self, msg: str):
+        self.__classifyCountBar.setText("分类数量：{}".format(msg))
 
     def __setImageCountBar(self, count: int):
         """设置图像数量状态栏信息"""
