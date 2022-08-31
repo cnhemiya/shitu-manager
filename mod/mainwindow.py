@@ -38,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.__imageListMgr = mod.image_list_manager.ImageListManager()
 
         self.__appMenu = QtWidgets.QMenu()
+        self.__moreLibraryMenu = QtWidgets.QMenu()
         self.__initAppMenu()  # 初始化应用菜单
 
         self.__pathBar = QtWidgets.QLabel(self) # 路径
@@ -126,7 +127,11 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "新建图像库", self.newImageLibrary)
         mod.utils.setMenu(self.__appMenu, "打开图像库", self.openImageLibrary)
         mod.utils.setMenu(self.__appMenu, "保存图像库", self.saveImageLibrary)
-        mod.utils.setMenu(self.__appMenu, "导入图像库", self.importImageLibrary)
+        
+        self.__moreLibraryMenu.setTitle("图像库附加功能")
+        mod.utils.setMenu(self.__moreLibraryMenu, "导入到当前图像库", self.importImageLibrary)
+        self.__appMenu.addMenu(self.__moreLibraryMenu)
+
         self.__appMenu.addSeparator()
         mod.utils.setMenu(self.__appMenu, "新建/重建 索引库", self.newIndexLibrary)
         # mod.utils.setMenu(self.__appMenu, "打开索引库", self.openIndexLibrary)
@@ -198,6 +203,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def importImageLibrary(self):
         """从其它图像库导入到当前图像库，建议当前库是新建的空库"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
+            return 
         from_path = QtWidgets.QFileDialog.getOpenFileName(caption="导入图像库", filter="txt (*.txt)")[0]
         from_mgr = mod.image_list_manager.ImageListManager(from_path)
         count = mod.utils.oneKeyImport(from_mgr.filePath, self.__imageListMgr.filePath)
