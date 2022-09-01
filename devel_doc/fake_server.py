@@ -5,6 +5,7 @@ import json
 from http.server import HTTPServer, BaseHTTPRequestHandler
 import os
 import sys
+import time
 
 __dir__ = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
@@ -20,6 +21,7 @@ class Resquest(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
+        time.sleep(2)
         self.wfile.write(json.dumps(data).encode())
 
 def main():
