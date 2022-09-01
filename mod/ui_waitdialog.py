@@ -18,9 +18,9 @@ class Ui_WaitDialog(object):
         WaitDialog.resize(324, 78)
         self.verticalLayout = QtWidgets.QVBoxLayout(WaitDialog)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.label = QtWidgets.QLabel(WaitDialog)
-        self.label.setObjectName("label")
-        self.verticalLayout.addWidget(self.label)
+        self.msgLabel = QtWidgets.QLabel(WaitDialog)
+        self.msgLabel.setObjectName("msgLabel")
+        self.verticalLayout.addWidget(self.msgLabel)
         self.progressBar = QtWidgets.QProgressBar(WaitDialog)
         self.progressBar.setMaximum(0)
         self.progressBar.setProperty("value", -1)
@@ -35,7 +35,7 @@ class Ui_WaitDialog(object):
     def retranslateUi(self, WaitDialog):
         _translate = QtCore.QCoreApplication.translate
         WaitDialog.setWindowTitle(_translate("WaitDialog", "请等待"))
-        self.label.setText(_translate("WaitDialog", "正在更新索引库，请等待。。。"))
+        self.msgLabel.setText(_translate("WaitDialog", "正在更新索引库，请等待。。。"))
 
 
 if __name__ == "__main__":

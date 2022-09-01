@@ -18,6 +18,7 @@ import mod.ui_waitdialog
 
 
 TOOL_BTN_ICON_SIZE = 64
+TOOL_BTN_ICON_SMALL = 48
 
 # try:
 #     DEFAULT_HOST = socket.gethostbyname(socket.gethostname())
@@ -111,15 +112,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.removeClassifyBtn.clicked.connect(self.__classifyUiContext.removeClassify)
 
         self.__setToolButton(self.ui.searchClassifyBtn, "查找分类",
-                             "./resource/search_classify.png", TOOL_BTN_ICON_SIZE)
+                             "./resource/search_classify.png", TOOL_BTN_ICON_SMALL)
         self.ui.searchClassifyBtn.clicked.connect(self.__classifyUiContext.searchClassify)
 
         self.__setToolButton(self.ui.addImageBtn, "添加图片",
-                             "./resource/add_image.png", TOOL_BTN_ICON_SIZE)
+                             "./resource/add_image.png", TOOL_BTN_ICON_SMALL)
         self.ui.addImageBtn.clicked.connect(self.__imageListUiContext.addImage)
 
         self.__setToolButton(self.ui.removeImageBtn, "移除图片",
-                             "./resource/remove_image.png", TOOL_BTN_ICON_SIZE)
+                             "./resource/remove_image.png", TOOL_BTN_ICON_SMALL)
         self.ui.removeImageBtn.clicked.connect(self.__imageListUiContext.removeImage)
 
         self.ui.searchClassifyHistoryCmb.setToolTip("查找分类历史")

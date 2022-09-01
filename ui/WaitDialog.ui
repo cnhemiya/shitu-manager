@@ -18,7 +18,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="msgLabel">
      <property name="text">
       <string>正在更新索引库，请等待。。。</string>
      </property>
