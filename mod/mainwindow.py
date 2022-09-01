@@ -73,6 +73,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __initUI(self):
         """初始化界面"""
+        # 窗口图标
+        self.setWindowIcon(QtGui.QIcon("./resource/app_icon.png"))
+        
         # 初始化分割窗口
         self.ui.splitter.setStretchFactor(0, 20)
         self.ui.splitter.setStretchFactor(1, 80)
