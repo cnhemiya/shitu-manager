@@ -196,15 +196,16 @@ class MainWindow(QtWidgets.QMainWindow):
     def newImageLibrary(self):
         """新建图像库"""
         dir_path = self.__openDirDialog("新建图像库")
-        if dir_path != None:
-            if not mod.utils.isEmptyDir(dir_path):
-                QtWidgets.QMessageBox.warning(self, "错误", "该目录不为空，请选择空目录")
-                return
-            if not mod.utils.initLibrary(dir_path):
-                QtWidgets.QMessageBox.warning(self, "错误", "新建图像库失败")
-                return
-            QtWidgets.QMessageBox.information(self, "提示", "新建图像库成功")
-            self.__reload(os.path.join(dir_path, "image_list.txt"), dir_path)
+        if dir_path == None:
+            return
+        if not mod.utils.isEmptyDir(dir_path):
+            QtWidgets.QMessageBox.warning(self, "错误", "该目录不为空，请选择空目录")
+            return
+        if not mod.utils.initLibrary(dir_path):
+            QtWidgets.QMessageBox.warning(self, "错误", "新建图像库失败")
+            return
+        QtWidgets.QMessageBox.information(self, "提示", "新建图像库成功")
+        self.__reload(os.path.join(dir_path, "image_list.txt"), dir_path)
 
     def __openDirDialog(self, title: str):
         """打开目录对话框"""
