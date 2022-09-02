@@ -7,6 +7,7 @@ class ImageListManager:
     """
     def __init__(self, file_path="", encoding="utf-8"):
         self.__filePath = ""
+        self.__dirName = ""
         self.__dataList = {}
         self.__findLikeClassifyResult = []
         if file_path != "":
@@ -19,6 +20,10 @@ class ImageListManager:
     @property
     def dirName(self):
         return os.path.dirname(self.__filePath)
+
+    @dirName.setter
+    def dirName(self, value):
+        self.__dirName = value
 
     @property
     def dataList(self):
@@ -58,6 +63,7 @@ class ImageListManager:
         if not os.path.exists(file_path):
             raise Exception("文件不存在：{}".format(file_path))
         self.__filePath = file_path
+        self.__dirName = os.path.dirname(self.__filePath)
         self.__readData(file_path, encoding)
 
     def __readData(self, file_path: str, encoding="utf-8"):
@@ -98,6 +104,7 @@ class ImageListManager:
             file_path = self.__filePath
         if not os.path.exists(file_path):
             return False
+        self.__dirName = os.path.dirname(self.__filePath)
         lines = []
         for classify in self.__dataList.keys():
             for path in self.__dataList[classify]:
@@ -113,7 +120,7 @@ class ImageListManager:
         Args:
             image_path (str): 图片路径
         """
-        return os.path.join(self.dirName, image_path)
+        return os.path.join(self.__dirName, image_path)
 
     def realPathList(self, classify:str):
         """
@@ -131,7 +138,7 @@ class ImageListManager:
         if len(paths) == 0:
             return []
         for i in range(len(paths)):
-            paths[i] = os.path.join(self.dirName, paths[i])
+            paths[i] = os.path.join(self.__dirName, paths[i])
         return paths
 
     def findLikeClassify(self, name: str):
