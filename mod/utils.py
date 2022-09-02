@@ -57,14 +57,36 @@ def oneKeyImportFromFile(from_path: str, to_path: str):
     to_mgr = mod.image_list_manager.ImageListManager(file_path=to_path)
     return oneKeyImport(from_mgr=from_mgr, to_mgr=to_mgr)
 
-def oneKeyImportFromDirs(from_dirs: str, to_image_list_path: str):
-    if not os.path.exists(from_dirs) or not os.path.exists(to_image_list_path):
+def oneKeyImportFromDirs(from_dir: str, to_image_list_path: str):
+    """从其它图像库 from_dir 搜索子目录 导入到图像库 to_image_list_path"""
+    if not os.path.exists(from_dir) or not os.path.exists(to_image_list_path):
         return None
-    if from_dirs == os.path.dirname(to_image_list_path):
+    if from_dir == os.path.dirname(to_image_list_path):
         return None
+    from_mgr = mod.image_list_manager.ImageListManager()
+    to_mgr = mod.image_list_manager.ImageListManager(file_path=to_image_list_path)
+    from_mgr.dirName = from_dir
+    sub_dir_list = os.listdir(from_dir)
+    for sub_dir in sub_dir_list:
+        real_sub_dir = os.path.join(from_dir, sub_dir)
+        if not os.path.isdir(real_sub_dir):
+            continue
+        img_list = os.listdir(real_sub_dir)
+        img_path = []
+        for img in img_list:
+            real_img = os.path.join(real_sub_dir, img)
+            if not os.path.isfile(real_img):
+                continue
+            img_path.append("{}/{}".format(sub_dir, img))
+        if len(img_path) == 0:
+            continue
+        from_mgr.addClassify(sub_dir)
+        from_mgr.resetImageList(sub_dir, img_path)
+    return oneKeyImport(from_mgr=from_mgr, to_mgr=to_mgr)
 
 def oneKeyImport(from_mgr: mod.image_list_manager.ImageListManager, 
         to_mgr: mod.image_list_manager.ImageListManager):
+    """一键导入"""
     count = 0
     for classify in from_mgr.classifyList:
         img_list = from_mgr.realPathList(classify)
@@ -87,7 +109,6 @@ def oneKeyImport(from_mgr: mod.image_list_manager.ImageListManager,
         to_mgr.resetImageList(classify, to_img_list)
     to_mgr.writeFile()
     return count
-
 
 def newFile(file_path: str):
     """创建文件"""
