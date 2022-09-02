@@ -146,7 +146,8 @@ class MainWindow(QtWidgets.QMainWindow):
         mod.utils.setMenu(self.__appMenu, "保存图像库", self.saveImageLibrary)
         
         self.__libraryAppendMenu.setTitle("图像库附加功能")
-        mod.utils.setMenu(self.__libraryAppendMenu, "导入到当前图像库", self.importImageLibrary)
+        mod.utils.setMenu(self.__libraryAppendMenu, "导入 image_list 图像", self.importImageListImage)
+        mod.utils.setMenu(self.__libraryAppendMenu, "导入多文件夹图像", self.importDirsImage)
         self.__appMenu.addMenu(self.__libraryAppendMenu)
 
         self.__appMenu.addSeparator()
@@ -247,19 +248,33 @@ class MainWindow(QtWidgets.QMainWindow):
 如果是新建图像库或者没有索引库，请新建索引库。"
         QtWidgets.QMessageBox.information(self, "提示", hint_str)
 
-    def importImageLibrary(self):
-        """从其它图像库导入到当前图像库，建议当前库是新建的空库"""
+    def importImageListImage(self):
+        """从其它图像库 image_list 导入到当前图像库，建议当前库是新建的空库"""
         if not os.path.exists(self.__imageListMgr.filePath):
             QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
             return 
-        from_path = QtWidgets.QFileDialog.getOpenFileName(caption="导入图像库", filter="txt (*.txt)")[0]
+        from_path = QtWidgets.QFileDialog.getOpenFileName(caption="导入 image_list 图像", filter="txt (*.txt)")[0]
         from_mgr = mod.image_list_manager.ImageListManager(from_path)
-        count = mod.utils.oneKeyImport(from_mgr.filePath, self.__imageListMgr.filePath)
+        count = mod.utils.oneKeyImportFromFile(from_mgr.filePath, self.__imageListMgr.filePath)
         if count == None:
             QtWidgets.QMessageBox.warning(self, "错误", "导入到当前图像库错误")
             return
         QtWidgets.QMessageBox.information(self, "提示", "导入图像库成功，导入图像：{}".format(count))
         self.__reload(self.__imageListMgr.filePath, self.__imageListMgr.dirName)
+
+    def importDirsImage(self):
+        """从其它图像库 多文件夹图像 导入到当前图像库，建议当前库是新建的空库"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
+            return
+        dir_path = self.__openDirDialog("导入多文件夹图像")
+        if dir_path != None:
+            QtWidgets.QMessageBox.information(self, "提示", "导入图像库成功，导入图像：")
+            return
+            # if not mod.utils.initLibrary(dir_path):
+            #     QtWidgets.QMessageBox.warning(self, "错误", "新建图像库失败")
+            #     return
+            # self.__reload(os.path.join(dir_path, "image_list.txt"), dir_path)
 
     def __newIndexThread(self, index_root_path: str, image_list_path: str, index_method: str, force: bool):
         """新建重建索引库线程"""

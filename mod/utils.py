@@ -47,7 +47,7 @@ def copyImageToDir(self, from_image_path: str, to_dir_path: str):
     copyFile(from_image_path, new_path)
     return new_path
 
-def oneKeyImport(from_path: str, to_path: str):
+def oneKeyImportFromFile(from_path: str, to_path: str):
     """从其它图像库 from_path {image_list.txt} 导入到图像库 to_path {image_list.txt}"""
     if not os.path.exists(from_path) or not os.path.exists(to_path):
         return None
@@ -77,6 +77,12 @@ def oneKeyImport(from_path: str, to_path: str):
         to_mgr.resetImageList(classify, to_img_list)
     to_mgr.writeFile()
     return count
+
+def oneKeyImportFromDirs(from_dirs: str, to_image_list_path: str):
+    if not os.path.exists(from_dirs) or not os.path.exists(to_image_list_path):
+        return None
+    if from_dirs == os.path.dirname(to_image_list_path):
+        return None
 
 def newFile(file_path: str):
     """创建文件"""
