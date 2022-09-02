@@ -19,7 +19,7 @@ class ImageListManager:
 
     @property
     def dirName(self):
-        return os.path.dirname(self.__filePath)
+        return self.__dirName
 
     @dirName.setter
     def dirName(self, value):
