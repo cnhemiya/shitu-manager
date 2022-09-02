@@ -55,6 +55,16 @@ def oneKeyImportFromFile(from_path: str, to_path: str):
         return None
     from_mgr = mod.image_list_manager.ImageListManager(file_path=from_path)
     to_mgr = mod.image_list_manager.ImageListManager(file_path=to_path)
+    return oneKeyImport(from_mgr=from_mgr, to_mgr=to_mgr)
+
+def oneKeyImportFromDirs(from_dirs: str, to_image_list_path: str):
+    if not os.path.exists(from_dirs) or not os.path.exists(to_image_list_path):
+        return None
+    if from_dirs == os.path.dirname(to_image_list_path):
+        return None
+
+def oneKeyImport(from_mgr: mod.image_list_manager.ImageListManager, 
+        to_mgr: mod.image_list_manager.ImageListManager):
     count = 0
     for classify in from_mgr.classifyList:
         img_list = from_mgr.realPathList(classify)
@@ -78,11 +88,6 @@ def oneKeyImportFromFile(from_path: str, to_path: str):
     to_mgr.writeFile()
     return count
 
-def oneKeyImportFromDirs(from_dirs: str, to_image_list_path: str):
-    if not os.path.exists(from_dirs) or not os.path.exists(to_image_list_path):
-        return None
-    if from_dirs == os.path.dirname(to_image_list_path):
-        return None
 
 def newFile(file_path: str):
     """创建文件"""
