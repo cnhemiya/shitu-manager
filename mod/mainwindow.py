@@ -33,9 +33,10 @@ PADDLECLAS_DOC_URL = "https://gitee.com/paddlepaddle/PaddleClas"
 
 class MainWindow(QtWidgets.QMainWindow):
     """主窗口"""
-    newIndexMsg = QtCore.pyqtSignal(str) # 新建索引库线程信息
-    openIndexMsg = QtCore.pyqtSignal(str) # 打开索引库线程信息
-    updateIndexMsg = QtCore.pyqtSignal(str) # 更新索引库线程信息
+    newIndexMsg = QtCore.pyqtSignal(str) # 新建索引库线程信号
+    openIndexMsg = QtCore.pyqtSignal(str) # 打开索引库线程信号
+    updateIndexMsg = QtCore.pyqtSignal(str) # 更新索引库线程信号
+    importImageCount = QtCore.pyqtSignal(int) # 导入图像数量信号
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -192,6 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.newIndexMsg.connect(self.__onNewIndexMsg)
         self.openIndexMsg.connect(self.__onOpenIndexMsg)
         self.updateIndexMsg.connect(self.__onUpdateIndexMsg)
+        self.importImageCount.connect(self.__onImportImageCount)
 
     def newImageLibrary(self):
         """新建图像库"""
@@ -250,22 +252,46 @@ class MainWindow(QtWidgets.QMainWindow):
 如果是新建图像库或者没有索引库，请新建索引库。"
         QtWidgets.QMessageBox.information(self, "提示", hint_str)
 
-    def importImageListImage(self):
-        """从其它图像库 image_list 导入到当前图像库，建议当前库是新建的空库"""
-        if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
-            return 
-        from_path = QtWidgets.QFileDialog.getOpenFileName(caption="导入 image_list 图像", filter="txt (*.txt)")[0]
-        from_mgr = mod.image_list_manager.ImageListManager(from_path)
-        count = mod.utils.oneKeyImportFromFile(from_mgr.filePath, self.__imageListMgr.filePath)
-        if count == None:
+    def __onImportImageCount(self, count: int):
+        """导入图像槽"""
+        self.__stopWait()
+        if count == -1:
             QtWidgets.QMessageBox.warning(self, "错误", "导入到当前图像库错误")
             return
         QtWidgets.QMessageBox.information(self, "提示", "导入图像库成功，导入图像：{}".format(count))
         self.__reload(self.__imageListMgr.filePath, self.__imageListMgr.dirName)
 
+    def __importImageListImageThread(self, from_path: str, to_path: str):
+        """导入 image_list 图像 线程"""
+        count = mod.utils.oneKeyImportFromFile(from_path=from_path, to_path=to_path)
+        if count == None:
+            count = -1
+        self.importImageCount.emit(count)
+
+    def importImageListImage(self):
+        """导入 image_list 图像 到当前图像库，建议当前库是新建的空库"""
+        if not os.path.exists(self.__imageListMgr.filePath):
+            QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
+            return 
+        from_path = QtWidgets.QFileDialog.getOpenFileName(caption="导入 image_list 图像", filter="txt (*.txt)")[0]
+        if not os.path.exists(from_path):
+            QtWidgets.QMessageBox.information(self, "提示", "打开的文件不存在")
+            return
+        from_mgr = mod.image_list_manager.ImageListManager(from_path)
+        self.__startWait("正在导入图像，请等待。。。")
+        thread = threading.Thread(target=self.__importImageListImageThread, 
+                args=(from_mgr.filePath, self.__imageListMgr.filePath))
+        thread.start()
+
+    def __importDirsImageThread(self, from_dir: str, to_image_list_path: str):
+        """导入多文件夹图像 线程"""
+        count = mod.utils.oneKeyImportFromDirs(from_dir=from_dir, to_image_list_path=to_image_list_path)
+        if count == None:
+            count = -1
+        self.importImageCount.emit(count)
+
     def importDirsImage(self):
-        """从其它图像库 多文件夹图像 导入到当前图像库，建议当前库是新建的空库"""
+        """导入 多文件夹图像 到当前图像库，建议当前库是新建的空库"""
         if not os.path.exists(self.__imageListMgr.filePath):
             QtWidgets.QMessageBox.information(self, "提示", "请先打开正确的图像库")
             return
@@ -275,12 +301,10 @@ class MainWindow(QtWidgets.QMainWindow):
         if not os.path.exists(dir_path):
             QtWidgets.QMessageBox.information(self, "提示", "打开的目录不存在")
             return
-        count = mod.utils.oneKeyImportFromDirs(from_dir=dir_path, to_image_list_path=self.__imageListMgr.filePath)
-        if count == None:
-            QtWidgets.QMessageBox.warning(self, "错误", "导入到当前图像库错误")
-            return
-        QtWidgets.QMessageBox.information(self, "提示", "导入图像库成功，导入图像：{}".format(count))
-        self.__reload(self.__imageListMgr.filePath, self.__imageListMgr.dirName)
+        self.__startWait("正在导入图像，请等待。。。")
+        thread = threading.Thread(target=self.__importDirsImageThread, 
+                args=(dir_path, self.__imageListMgr.filePath))
+        thread.start()
 
     def __newIndexThread(self, index_root_path: str, image_list_path: str, index_method: str, force: bool):
         """新建重建索引库线程"""
