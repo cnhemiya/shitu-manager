@@ -122,7 +122,7 @@ class ImageListManager:
         """
         return os.path.join(self.__dirName, image_path)
 
-    def realPathList(self, classify:str):
+    def realPathList(self, classify: str):
         """
         获取分类下的真实路径列表
 
@@ -187,7 +187,7 @@ class ImageListManager:
             return False
         self.__dataList.pop(classify)
         return True
-    
+
     def renameClassify(self, old_classify: str, new_classify: str):
         """
         重命名分类名称

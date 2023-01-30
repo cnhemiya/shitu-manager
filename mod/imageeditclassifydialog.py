@@ -1,21 +1,15 @@
 import os
-import sys
-
-__dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-import mod.image_list_manager
-import mod.ui_imageeditclassifydialog
-import mod.utils
+from mod import image_list_manager
+from mod import ui_imageeditclassifydialog
+from mod import utils
 
 
 class ImageEditClassifyDialog(QtWidgets.QDialog):
     """图像编辑分类对话框"""
-
     def __init__(self, parent, old_classify, classify_list):
         super(ImageEditClassifyDialog, self).__init__(parent)
-        self.ui = mod.ui_imageeditclassifydialog.Ui_Dialog()
+        self.ui = ui_imageeditclassifydialog.Ui_Dialog()
         self.ui.setupUi(self)  # 初始化主窗口界面
         self.__oldClassify = old_classify
         self.__classifyList = classify_list
@@ -31,7 +25,8 @@ class ImageEditClassifyDialog(QtWidgets.QDialog):
     def __initUi(self):
         self.ui.oldLineEdit.setText(self.__oldClassify)
         self.__setClassifyList(self.__classifyList)
-        self.ui.classifyListView.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.ui.classifyListView.setEditTriggers(
+            QtWidgets.QAbstractItemView.NoEditTriggers)
 
     def __connectSignal(self):
         self.ui.classifyListView.clicked.connect(self.selectedListView)
@@ -54,4 +49,4 @@ class ImageEditClassifyDialog(QtWidgets.QDialog):
         for classify in self.__classifyList:
             if txt in classify:
                 self.__searchResult.append(classify)
-        self.__setClassifyList( self.__searchResult)
+        self.__setClassifyList(self.__searchResult)

@@ -1,22 +1,18 @@
 import os
-import sys
-
-__dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
 from PyQt5 import QtCore, QtWidgets
-import mod.image_list_manager as imglistmgr
-import mod.utils
-import mod.ui_addclassifydialog
-import mod.ui_renameclassifydialog
+from mod import image_list_manager as imglistmgr
+from mod import utils
+from mod import ui_addclassifydialog
+from mod import ui_renameclassifydialog
 
 
 class ClassifyUiContext(QtCore.QObject):
     # 分类界面相关业务
-    selected = QtCore.pyqtSignal(str) # 选择分类信号
-    
-    def __init__(self, ui:QtWidgets.QListView, parent:QtWidgets.QMainWindow, 
-                image_list_mgr:imglistmgr.ImageListManager):
+    selected = QtCore.pyqtSignal(str)  # 选择分类信号
+
+    def __init__(self, ui: QtWidgets.QListView, parent: QtWidgets.QMainWindow,
+                 image_list_mgr: imglistmgr.ImageListManager):
         super(ClassifyUiContext, self).__init__()
         self.__ui = ui
         self.__parent = parent
@@ -53,9 +49,9 @@ class ClassifyUiContext(QtCore.QObject):
 
     def __initMenu(self):
         """初始化分类界面菜单"""
-        mod.utils.setMenu(self.__menu, "添加分类", self.addClassify)
-        mod.utils.setMenu(self.__menu, "移除分类", self.removeClassify)
-        mod.utils.setMenu(self.__menu, "重命名分类", self.renemeClassify)
+        utils.setMenu(self.__menu, "添加分类", self.addClassify)
+        utils.setMenu(self.__menu, "移除分类", self.removeClassify)
+        utils.setMenu(self.__menu, "重命名分类", self.renemeClassify)
 
         self.__ui.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.__ui.customContextMenuRequested.connect(self.__showMenu)
@@ -83,7 +79,7 @@ class ClassifyUiContext(QtCore.QObject):
             return
         ole_name = index.data()
         dlg = QtWidgets.QDialog(parent=self.parent)
-        ui = mod.ui_renameclassifydialog.Ui_RenameClassifyDialog()
+        ui = ui_renameclassifydialog.Ui_RenameClassifyDialog()
         ui.setupUi(dlg)
         ui.oldNameLineEdit.setText(ole_name)
         result = dlg.exec_()
@@ -99,10 +95,11 @@ class ClassifyUiContext(QtCore.QObject):
     def addClassify(self):
         """添加分类"""
         if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            QtWidgets.QMessageBox.information(self.__parent, "提示",
+                                              "请先打开正确的图像库")
             return
         dlg = QtWidgets.QDialog(parent=self.parent)
-        ui = mod.ui_addclassifydialog.Ui_AddClassifyDialog()
+        ui = ui_addclassifydialog.Ui_AddClassifyDialog()
         ui.setupUi(dlg)
         result = dlg.exec_()
         txt = ui.lineEdit.text()
@@ -116,21 +113,25 @@ class ClassifyUiContext(QtCore.QObject):
     def removeClassify(self):
         """移除分类"""
         if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            QtWidgets.QMessageBox.information(self.__parent, "提示",
+                                              "请先打开正确的图像库")
             return
         if not self.__ui.currentIndex().isValid():
             return
         classify = self.__ui.currentIndex().data()
-        result = QtWidgets.QMessageBox.information(self.parent, "移除分类", 
-                "确定移除分类: {}".format(classify),
-                buttons=QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel,
-                defaultButton=QtWidgets.QMessageBox.Cancel)
+        result = QtWidgets.QMessageBox.information(
+            self.parent,
+            "移除分类",
+            "确定移除分类: {}".format(classify),
+            buttons=QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel,
+            defaultButton=QtWidgets.QMessageBox.Cancel)
         if result == QtWidgets.QMessageBox.Ok:
             if len(self.__imageListMgr.imageList(classify)) > 0:
-                QtWidgets.QMessageBox.warning(self.parent, "移除分类", "分类下存在图片，请先移除图片")
+                QtWidgets.QMessageBox.warning(self.parent, "移除分类",
+                                              "分类下存在图片，请先移除图片")
             else:
                 self.__imageListMgr.removeClassify(classify)
-                self.setClassifyList(self.__imageListMgr.classifyList())
+                self.setClassifyList(self.__imageListMgr.classifyList)
 
     def renemeClassify(self):
         """重命名分类"""

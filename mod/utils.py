@@ -1,19 +1,17 @@
 import os
 import sys
 
-__dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
-
 from PyQt5 import QtCore, QtGui, QtWidgets
 import hashlib
 import shutil
-import mod.image_list_manager
+from mod import image_list_manager
 
 
-def setMenu(menu:QtWidgets.QMenu, text: str, triggered):
+def setMenu(menu: QtWidgets.QMenu, text: str, triggered):
     """设置菜单"""
     action = menu.addAction(text)
     action.triggered.connect(triggered)
+
 
 def fileMD5(file_path: str):
     """计算文件的MD5值"""
@@ -22,10 +20,12 @@ def fileMD5(file_path: str):
         md5.update(f.read())
     return md5.hexdigest().lower()
 
+
 def copyFile(from_path: str, to_path: str):
     """复制文件"""
     shutil.copyfile(from_path, to_path)
     return os.path.exists(to_path)
+
 
 def removeFile(file_path: str):
     """删除文件"""
@@ -33,9 +33,11 @@ def removeFile(file_path: str):
         os.remove(file_path)
     return not os.path.exists(file_path)
 
+
 def fileExtension(file_path: str):
     """获取文件的扩展名"""
     return os.path.splitext(file_path)[1]
+
 
 def copyImageToDir(self, from_image_path: str, to_dir_path: str):
     """复制图像文件到目标目录"""
@@ -47,15 +49,17 @@ def copyImageToDir(self, from_image_path: str, to_dir_path: str):
     copyFile(from_image_path, new_path)
     return new_path
 
+
 def oneKeyImportFromFile(from_path: str, to_path: str):
     """从其它图像库 from_path {image_list.txt} 导入到图像库 to_path {image_list.txt}"""
     if not os.path.exists(from_path) or not os.path.exists(to_path):
         return None
     if from_path == to_path:
         return None
-    from_mgr = mod.image_list_manager.ImageListManager(file_path=from_path)
-    to_mgr = mod.image_list_manager.ImageListManager(file_path=to_path)
+    from_mgr = image_list_manager.ImageListManager(file_path=from_path)
+    to_mgr = image_list_manager.ImageListManager(file_path=to_path)
     return oneKeyImport(from_mgr=from_mgr, to_mgr=to_mgr)
+
 
 def oneKeyImportFromDirs(from_dir: str, to_image_list_path: str):
     """从其它图像库 from_dir 搜索子目录 导入到图像库 to_image_list_path"""
@@ -63,8 +67,9 @@ def oneKeyImportFromDirs(from_dir: str, to_image_list_path: str):
         return None
     if from_dir == os.path.dirname(to_image_list_path):
         return None
-    from_mgr = mod.image_list_manager.ImageListManager()
-    to_mgr = mod.image_list_manager.ImageListManager(file_path=to_image_list_path)
+    from_mgr = image_list_manager.ImageListManager()
+    to_mgr = image_list_manager.ImageListManager(
+        file_path=to_image_list_path)
     from_mgr.dirName = from_dir
     sub_dir_list = os.listdir(from_dir)
     for sub_dir in sub_dir_list:
@@ -84,8 +89,9 @@ def oneKeyImportFromDirs(from_dir: str, to_image_list_path: str):
         from_mgr.resetImageList(sub_dir, img_path)
     return oneKeyImport(from_mgr=from_mgr, to_mgr=to_mgr)
 
-def oneKeyImport(from_mgr: mod.image_list_manager.ImageListManager, 
-        to_mgr: mod.image_list_manager.ImageListManager):
+
+def oneKeyImport(from_mgr: image_list_manager.ImageListManager,
+                 to_mgr: image_list_manager.ImageListManager):
     """一键导入"""
     count = 0
     for classify in from_mgr.classifyList:
@@ -110,6 +116,7 @@ def oneKeyImport(from_mgr: mod.image_list_manager.ImageListManager,
     to_mgr.writeFile()
     return count
 
+
 def newFile(file_path: str):
     """创建文件"""
     if os.path.exists(file_path):
@@ -119,9 +126,11 @@ def newFile(file_path: str):
             pass
         return True
 
+
 def isEmptyDir(dir_path: str):
     """判断目录是否为空"""
     return not os.listdir(dir_path)
+
 
 def initLibrary(dir_path: str):
     """初始化库"""

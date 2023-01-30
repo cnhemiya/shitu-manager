@@ -1,10 +1,5 @@
 import json
 import os
-import sys
-
-__dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
-
 import urllib3
 import urllib.parse
 
@@ -20,10 +15,16 @@ class IndexHttpClient():
     def url(self):
         return "http://{}:{}".format(self.__host, self.__port)
 
-    def new_index(self, image_list_path: str, index_root_path: str, index_method = "HNSW32", force = False):
+    def new_index(self,
+                  image_list_path: str,
+                  index_root_path: str,
+                  index_method="HNSW32",
+                  force=False):
         """新建 重建 库"""
         if index_method not in ["HNSW32", "FLAT", "IVF"]:
-            raise Exception("index_method 必须是 HNSW32, FLAT, IVF，实际值为：{}".format(index_method))
+            raise Exception(
+                "index_method 必须是 HNSW32, FLAT, IVF，实际值为：{}".format(
+                    index_method))
         params = {"image_list_path":image_list_path, \
             "index_root_path":index_root_path, \
             "index_method":index_method, \
@@ -32,8 +33,10 @@ class IndexHttpClient():
 
     def open_index(self, index_root_path: str, image_list_path: str):
         """打开库"""
-        params = {"index_root_path":index_root_path,
-                "image_list_path":image_list_path}
+        params = {
+            "index_root_path": index_root_path,
+            "image_list_path": image_list_path
+        }
         return self.__post(self.url() + "/open_index?", params)
 
     def update_index(self, image_list_path: str, index_root_path: str):

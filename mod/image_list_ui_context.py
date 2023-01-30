@@ -1,15 +1,11 @@
 import os
 from stat import filemode
-import sys
-
-__dir__ = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.abspath(os.path.join(__dir__, '../')))
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-import mod.image_list_manager as imglistmgr
-import mod.utils
-import mod.ui_renameclassifydialog
-import mod.imageeditclassifydialog
+from mod import image_list_manager as imglistmgr
+from mod import utils
+from mod import ui_renameclassifydialog
+from mod import imageeditclassifydialog
 
 # 图像缩放基数
 BASE_IMAGE_SIZE = 64
@@ -17,11 +13,12 @@ BASE_IMAGE_SIZE = 64
 
 class ImageListUiContext(QtCore.QObject):
     # 图片列表界面相关业务，style sheet 在 MainWindow.ui 相应的 ImageListWidget 中设置
-    listCount = QtCore.pyqtSignal(int) # 图像列表图像的数量
-    selectedCount = QtCore.pyqtSignal(int) # 图像列表选择图像的数量
+    listCount = QtCore.pyqtSignal(int)  # 图像列表图像的数量
+    selectedCount = QtCore.pyqtSignal(int)  # 图像列表选择图像的数量
 
-    def __init__(self, ui:QtWidgets.QListWidget, parent:QtWidgets.QMainWindow, 
-                image_list_mgr:imglistmgr.ImageListManager):
+    def __init__(self, ui: QtWidgets.QListWidget,
+                 parent: QtWidgets.QMainWindow,
+                 image_list_mgr: imglistmgr.ImageListManager):
         super(ImageListUiContext, self).__init__()
         self.__ui = ui
         self.__parent = parent
@@ -54,17 +51,18 @@ class ImageListUiContext(QtCore.QObject):
         self.__ui.setViewMode(QtWidgets.QListView.IconMode)
         self.__ui.setSpacing(15)
         self.__ui.setMovement(QtWidgets.QListView.Static)
-        self.__ui.setSelectionMode(QtWidgets.QAbstractItemView.ExtendedSelection)
+        self.__ui.setSelectionMode(
+            QtWidgets.QAbstractItemView.ExtendedSelection)
 
     def __initMenu(self):
         """初始化图片列表界面菜单"""
-        mod.utils.setMenu(self.__menu, "添加图片", self.addImage)
-        mod.utils.setMenu(self.__menu, "移除图片", self.removeImage)
-        mod.utils.setMenu(self.__menu, "编辑图片分类", self.editImageClassify)
+        utils.setMenu(self.__menu, "添加图片", self.addImage)
+        utils.setMenu(self.__menu, "移除图片", self.removeImage)
+        utils.setMenu(self.__menu, "编辑图片分类", self.editImageClassify)
         self.__menu.addSeparator()
-        mod.utils.setMenu(self.__menu, "选择全部图片", self.selectAllImage)
-        mod.utils.setMenu(self.__menu, "反向选择图片", self.reverseSelectImage)
-        mod.utils.setMenu(self.__menu, "取消选择图片", self.cancelSelectImage)
+        utils.setMenu(self.__menu, "选择全部图片", self.selectAllImage)
+        utils.setMenu(self.__menu, "反向选择图片", self.reverseSelectImage)
+        utils.setMenu(self.__menu, "取消选择图片", self.cancelSelectImage)
 
         self.__ui.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.__ui.customContextMenuRequested.connect(self.__showMenu)
@@ -78,7 +76,7 @@ class ImageListUiContext(QtCore.QObject):
         """连接信号与槽"""
         self.__ui.itemSelectionChanged.connect(self.onSelectionChanged)
 
-    def setImageScale(self, scale:int):
+    def setImageScale(self, scale: int):
         """设置图片大小"""
         self.__imageScale = scale
         size = QtCore.QSize(scale * BASE_IMAGE_SIZE, scale * BASE_IMAGE_SIZE)
@@ -87,9 +85,10 @@ class ImageListUiContext(QtCore.QObject):
             item = self.__ui.item(i)
             item.setSizeHint(size)
 
-    def setImageList(self, classify:str):
+    def setImageList(self, classify: str):
         """设置图片列表"""
-        size = QtCore.QSize(self.__imageScale * BASE_IMAGE_SIZE, self.__imageScale * BASE_IMAGE_SIZE)
+        size = QtCore.QSize(self.__imageScale * BASE_IMAGE_SIZE,
+                            self.__imageScale * BASE_IMAGE_SIZE)
         self.__selectedClassify = classify
         image_list = self.__imageListMgr.imageList(classify)
         self.__ui.clear()
@@ -110,12 +109,13 @@ class ImageListUiContext(QtCore.QObject):
     def addImage(self):
         """添加图片"""
         if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            QtWidgets.QMessageBox.information(self.__parent, "提示",
+                                              "请先打开正确的图像库")
             return
         filter = "图片 (*.png *.jpg *.jpeg *.PNG *.JPG *.JPEG);;所有文件(*.*)"
         dlg = QtWidgets.QFileDialog(self.__parent)
-        dlg.setFileMode(QtWidgets.QFileDialog.ExistingFiles) # 多选文件
-        dlg.setViewMode(QtWidgets.QFileDialog.Detail) # 详细模式
+        dlg.setFileMode(QtWidgets.QFileDialog.ExistingFiles)  # 多选文件
+        dlg.setViewMode(QtWidgets.QFileDialog.Detail)  # 详细模式
         file_paths = dlg.getOpenFileNames(filter=filter)[0]
         if len(file_paths) == 0:
             return
@@ -133,18 +133,20 @@ class ImageListUiContext(QtCore.QObject):
             if self.__selectedClassify == "":
                 QtWidgets.QMessageBox.warning(self.__parent, "提示", "请先选择分类")
                 return
-            new_list = self.__imageListMgr.imageList(self.__selectedClassify) + file_list
-            self.__imageListMgr.resetImageList(self.__selectedClassify, new_list)
+            new_list = self.__imageListMgr.imageList(
+                self.__selectedClassify) + file_list
+            self.__imageListMgr.resetImageList(self.__selectedClassify,
+                                               new_list)
             self.setImageList(self.__selectedClassify)
             self.__imageListMgr.writeFile()
 
     def __copyToImagesDir(self, image_path: str):
-        md5 = mod.utils.fileMD5(image_path)
-        file_ext = mod.utils.fileExtension(image_path)
+        md5 = utils.fileMD5(image_path)
+        file_ext = utils.fileExtension(image_path)
         to_dir = os.path.join(self.__imageListMgr.dirName, "images")
         new_path = os.path.join(to_dir, md5 + file_ext)
         if os.path.exists(to_dir):
-            mod.utils.copyFile(image_path, new_path)
+            utils.copyFile(image_path, new_path)
             return new_path
         else:
             return ""
@@ -152,13 +154,15 @@ class ImageListUiContext(QtCore.QObject):
     def removeImage(self):
         """移除图片"""
         if not os.path.exists(self.__imageListMgr.filePath):
-            QtWidgets.QMessageBox.information(self.__parent, "提示", "请先打开正确的图像库")
+            QtWidgets.QMessageBox.information(self.__parent, "提示",
+                                              "请先打开正确的图像库")
             return
         path_list = []
         image_list = self.__ui.selectedItems()
         if len(image_list) == 0:
             return
-        question = QtWidgets.QMessageBox.question(self.__parent, "移除图片", "确定移除所选图片吗？")
+        question = QtWidgets.QMessageBox.question(self.__parent, "移除图片",
+                                                  "确定移除所选图片吗？")
         if question == QtWidgets.QMessageBox.No:
             return
         for i in range(self.__ui.count()):
@@ -168,7 +172,8 @@ class ImageListUiContext(QtCore.QObject):
                 path_list.append(img_path)
             else:
                 # 从磁盘上删除图片
-                mod.utils.removeFile(os.path.join(self.__imageListMgr.dirName, img_path))
+                utils.removeFile(
+                    os.path.join(self.__imageListMgr.dirName, img_path))
         self.__imageListMgr.resetImageList(self.__selectedClassify, path_list)
         self.setImageList(self.__selectedClassify)
         self.__imageListMgr.writeFile()
@@ -176,9 +181,10 @@ class ImageListUiContext(QtCore.QObject):
     def editImageClassify(self):
         """编辑图片分类"""
         old_classify = self.__selectedClassify
-        dlg = mod.imageeditclassifydialog.ImageEditClassifyDialog(parent=self.__parent,
-                        old_classify=old_classify,
-                        classify_list=self.__imageListMgr.classifyList)
+        dlg = imageeditclassifydialog.ImageEditClassifyDialog(
+            parent=self.__parent,
+            old_classify=old_classify,
+            classify_list=self.__imageListMgr.classifyList)
         result = dlg.exec_()
         new_classify = dlg.newClassify
         if result == QtWidgets.QDialog.Accepted \
